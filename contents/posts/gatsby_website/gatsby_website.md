@@ -1,8 +1,8 @@
 ---
 title: "Gatsby와 Github Pages로 개인 블로그 만들기"
 description: "개인 블로그 만들기 기록"
-date: 2023-12-24
-update: 2023-12-24
+date: 2023-12-26
+update: 2023-12-26
 tags:
   - gatsby
   - github_pages
