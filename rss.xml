@@ -1,7 +1,76 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of Hiyen]]></title><description><![CDATA[Hello :) I'm Hiyen, a backend developer!]]></description><link>https://jinkshower.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 26 Dec 2023 01:16:59 GMT</lastBuildDate><item><title><![CDATA[Gatsby와 Github Pages로 개인 블로그 만들기]]></title><description><![CDATA[gatsby로 github pages 개인 블로그를 만든 기록과 트러블 슈팅 기록 Gatsby로 Github pages 개인 블로그 만들기 TIL을 적는 블로그와 기술블로그를 분리하고 싶어서 따로 웹사이트 만들 방법을 찾다가 github pages…]]></description><link>https://jinkshower.github.io/gatsby_website/</link><guid isPermaLink="false">https://jinkshower.github.io/gatsby_website/</guid><pubDate>Tue, 26 Dec 2023 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;gatsby로 github pages 개인 블로그를 만든 기록과 트러블 슈팅 기록&lt;/p&gt;
-&lt;h2&gt;Gatsby로 Github pages 개인 블로그 만들기&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of Hiyen]]></title><description><![CDATA[Hello :) I'm Hiyen, a backend developer!]]></description><link>https://jinkshower.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 26 Dec 2023 02:33:55 GMT</lastBuildDate><item><title><![CDATA[Gatsby와 Github Pages로 개인 블로그 만들기]]></title><description><![CDATA[Gatsby로 Github pages 개인 블로그 만들기 TIL을 적는 블로그와 기술블로그를 분리하고 싶어서 따로 웹사이트 만들 방법을 찾다가 github pages과 연동하여 손쉽게 웹사이트를 만들 수 있는 SSG…]]></description><link>https://jinkshower.github.io/gatsby_website/</link><guid isPermaLink="false">https://jinkshower.github.io/gatsby_website/</guid><pubDate>Tue, 26 Dec 2023 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Gatsby로 Github pages 개인 블로그 만들기&lt;/h2&gt;
 &lt;p&gt;TIL을 적는 블로그와 기술블로그를 분리하고 싶어서 따로 웹사이트 만들 방법을 찾다가 github pages과 연동하여 손쉽게 웹사이트를 만들 수 있는 SSG 프레임워크를 찾게 되었다. 여러가지가 있지만 가장 많이 쓰이는 것들은 &lt;code class=&quot;language-text&quot;&gt;Jekyll&lt;/code&gt; 과 &lt;code class=&quot;language-text&quot;&gt;Gatsby&lt;/code&gt; 이다. &lt;/p&gt;
-&lt;p&gt;처음에는 &lt;code class=&quot;language-text&quot;&gt;Jekyll&lt;/code&gt;로 웹사이트를 만들었지만 몇 가지 고치고 싶은 사항들이 보였는데&lt;/p&gt;</content:encoded></item><item><title><![CDATA[정적 팩토리 메서드, 언제 쓸까?]]></title><description><![CDATA[정적 팩토리 메서드란? Java…]]></description><link>https://jinkshower.github.io/staticfactorymethod/</link><guid isPermaLink="false">https://jinkshower.github.io/staticfactorymethod/</guid><pubDate>Sun, 24 Dec 2023 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;정적 팩토리 메서드란?&lt;/h2&gt;
+&lt;p&gt;처음에는 &lt;code class=&quot;language-text&quot;&gt;Jekyll&lt;/code&gt;로 웹사이트를 만들었지만 몇 가지 고치고 싶은 사항들이 보였는데 나는 Ruby를 잘 모르기 때문에 내가 나중에 커스텀하기에 조금 무리가 있는 것 같아 &lt;code class=&quot;language-text&quot;&gt;Gatsby&lt;/code&gt;로 프레임워크를 바꾸게 되었다.&lt;/p&gt;
+&lt;p&gt;나는 미리 만들어진 &lt;a href=&quot;%22https://github.com/devHudi/gatsby-starter-hoodie%22&quot;&gt;테마&lt;/a&gt; 를 사용했다.(감사합니다)&lt;/p&gt;
+&lt;h2&gt;Gatsby 설치 와 웹사이트 설정&lt;/h2&gt;
+&lt;p&gt;Gatsby cli를 설치해준다 &lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;npm install -g gatsby-cli&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;Gatsby Starter Library&lt;/code&gt;에서 마음에 드는 테마를 선택할 수 있다.
+원하는 테마를 고른 뒤&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;npx gatsby new {local-folder-name} {theme-name}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;을 실행해 로컬에 Gatsby 템플레이트를  만든다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;cd {local-folder-name}
+gatsby develop&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;을 실행하면 로컬에서 개츠비 서버가 구동된다. 서버 주소는 &lt;code class=&quot;language-text&quot;&gt;http://localhost:8000&lt;/code&gt;이다. &lt;/p&gt;
+&lt;h2&gt;Github Repository연결&lt;/h2&gt;
+&lt;p&gt;Github의 새 리포지토리를 생성한다.
+나는 &lt;code class=&quot;language-text&quot;&gt;{username}.github.io&lt;/code&gt;로 이름을 지정했다.
+다른 이름을 쓰거나 소스코드용 리포지토리를 따로 두고 싶다면
+&lt;a href=&quot;%22https://www.gatsbyjs.com/docs/how-to/previews-deploys-hosting/how-gatsby-works-with-github-pages/%22&quot;&gt;Gatsby 공식문서&lt;/a&gt; 를 참고하길 바란다&lt;/p&gt;
+&lt;p&gt;리포지토리를 생성했다면&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;git remote add origin {github-https-address}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;를 실행해 본인이 만든 웹사이트 폴더와 원격 저장소를 연결해준다.&lt;/p&gt;
+&lt;p&gt;그리고 커스텀 블로그 설정, 포스트 작성등을 한 후 &lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;git add .
+git commit -m &quot;{commit-name}&quot;
+git push origin main&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;위를 실행하여 원격 저장소에 로컬의 변경사항을 푸쉬해준다.&lt;/p&gt;
+&lt;h2&gt;배포 방법 정하기&lt;/h2&gt;
+&lt;p&gt;배포 방법에는 여러가지가 있지만 대표적인 2가지만 설명한다&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Netlify
+Github과 유연하게 연동 되고 무료인 Netlify의 배포 시스템을 이용할 수 있다.
+&lt;a href=&quot;%22https://www.netlify.com/blog/2016/02/24/a-step-by-step-guide-gatsby-on-netlify/%22&quot;&gt;A Step-by-Step Guide: Gatsby on Netlify&lt;/a&gt; 공식문서&lt;/li&gt;
+&lt;li&gt;Github pages
+Github pages에서 제공하는 &lt;code class=&quot;language-text&quot;&gt;gh-pages&lt;/code&gt;를 이용하여 배포할 수 있다
+&lt;a href=&quot;%22https://www.gatsbyjs.com/docs/how-to/previews-deploys-hosting/how-gatsby-works-with-github-pages/%22&quot;&gt;How Gatsby Works with GitHub Pages&lt;/a&gt;공식 문서&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;나는 Github pages를 이용했는데 Netlify는 커스텀 도메인이 없으면 &lt;code class=&quot;language-text&quot;&gt;{smt}.netflify.app&lt;/code&gt;를 도메인으로 제공해주는데 이 도메인보다 Github pages가 제공하는 &lt;code class=&quot;language-text&quot;&gt;{smt}.github.io&lt;/code&gt; 도메인이 마음에 들어서다(...)&lt;/p&gt;
+&lt;h2&gt;Github Pages로 배포하기&lt;/h2&gt;
+&lt;p&gt;배포용 브랜치 설정
+gh-pages는 배포용 브랜치가 따로 있어야 한다.&lt;br&gt;
+우리가 만든 gatsby 프로젝트의 main 브랜치에서 블로깅 작업을 했다면 public 폴더에 index.html이 있을텐데 기본적으로는 &lt;code class=&quot;language-text&quot;&gt;.gitignore&lt;/code&gt;에서 public을 푸쉬하지 않게 설정되어 있다.&lt;/p&gt;
+&lt;p&gt;현 상태에서 배포용 브랜치를 하나 만들어 둔다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;git branch deploy&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;이 배포용 브랜치에 public 폴더를 따로 업로드하는 작업을 gh-pages가 해준다.
+&lt;code class=&quot;language-text&quot;&gt;gh-pages&lt;/code&gt;패키지를 설치하자.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;npm install gh-pages&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+&lt;p&gt;[Trouble Shooting]&lt;br&gt;
+나는 npm install 과중에서 dependency conflict가 발생했다.&lt;br&gt;
+node 7 버전 이후 부터는 peer dependency를 자동으로 설치하기 때문에 이미 있는 dependency와 버전이 다를 경우 충돌이 발생한다&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;-&gt; 위의 install 커맨드에 &lt;code class=&quot;language-text&quot;&gt;--force&lt;/code&gt; 를 추가해서 충돌이 일어난 peer dependency를 강제 설치하거나 &lt;code class=&quot;language-text&quot;&gt;--legacy-peer-deps&lt;/code&gt;로 자동설치를 막는 방법이 있다. 나는 &lt;code class=&quot;language-text&quot;&gt;--force&lt;/code&gt;로 설치했다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;다음은 &lt;code class=&quot;language-text&quot;&gt;package.json&lt;/code&gt; 에 배포에 사용할 스크립트를 추가해주면 된다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;&quot;scripts&quot;: {
+    &quot;deploy&quot;: &quot;gatsby build &amp;amp;&amp;amp; gh-pages -d public -b deploy&quot;
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;그리고&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;npm run deploy &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;를 실행한다.   &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;[Trouble Shooting]&lt;br&gt;
+나는 위 커맨드를 실행하면 Segment Fault오류가 발생했는데 이럴때는
+&lt;code class=&quot;language-text&quot;&gt;npm rebuild&lt;/code&gt;를 실행해준 후 다시 위 커맨드를 실행해줬다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;이후
+Github repository의 Settings-Pages
+&lt;code class=&quot;language-text&quot;&gt;Build and deployment&lt;/code&gt;에서 배포용 브랜치로 전환해준다.&lt;/p&gt;
+&lt;p&gt;이렇게 까지 하면 &lt;code class=&quot;language-text&quot;&gt;Actions&lt;/code&gt;에서 웹사이트를 배포해주고 브라우저에서&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;https://{user-name}.github.io/&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt; 주소로 접속이 가능해진다. &lt;/p&gt;</content:encoded></item><item><title><![CDATA[정적 팩토리 메서드, 언제 쓸까?]]></title><description><![CDATA[정적 팩토리 메서드란? Java…]]></description><link>https://jinkshower.github.io/staticfactorymethod/</link><guid isPermaLink="false">https://jinkshower.github.io/staticfactorymethod/</guid><pubDate>Sun, 24 Dec 2023 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;정적 팩토리 메서드란?&lt;/h2&gt;
 &lt;p&gt;Java에서는 &lt;code class=&quot;language-text&quot;&gt;new&lt;/code&gt;  연산자를 이용하여 클래스의 인스턴스를 생성하는 것 외에 &lt;code class=&quot;language-text&quot;&gt;static&lt;/code&gt; 메서드를 사용하여 인스턴스를 반환 받는 기법이 있다.&lt;/p&gt;
 &lt;p&gt;간단한 예시로 사용방법을 알아 보자. &lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Car&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;  
