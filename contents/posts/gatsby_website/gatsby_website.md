@@ -1,0 +1,17 @@
+---
+title: "Gatsby와 Github Pages로 개인 블로그 만들기"
+description: "개인 블로그 만들기 기록"
+date: 2023-12-24
+update: 2023-12-24
+tags:
+  - gatsby
+  - github_pages
+series: "website"
+---
+gatsby로 github pages 개인 블로그를 만든 기록과 트러블 슈팅 기록
+
+## Gatsby로 Github pages 개인 블로그 만들기
+
+TIL을 적는 블로그와 기술블로그를 분리하고 싶어서 따로 웹사이트 만들 방법을 찾다가 github pages과 연동하여 손쉽게 웹사이트를 만들 수 있는 SSG 프레임워크를 찾게 되었다. 여러가지가 있지만 가장 많이 쓰이는 것들은 `Jekyll` 과 `Gatsby` 이다. 
+
+처음에는 `Jekyll`로 웹사이트를 만들었지만 몇 가지 고치고 싶은 사항들이 보였는데
