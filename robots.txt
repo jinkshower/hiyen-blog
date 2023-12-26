@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Sitemap: https://master--hiyen.netlify.app/sitemap-index.xml
+Host: https://master--hiyen.netlify.app
