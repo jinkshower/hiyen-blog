@@ -93,7 +93,7 @@ npm install gh-pages
 
 >[Trouble Shooting]   
 나는 npm install 과중에서 dependency conflict가 발생했다.   
-node 7 버전 이후 부터는 peer dependency를 자동으로 설치하기 때문에 이미 있는 dependency와 버전이 다를 경우 충돌이 발생한다
+node 7 버전 이후 부터는 peer dependency를 자동으로 설치하기 때문에 이미 있는 dependency와 버전이 다를 경우 충돌이 발생한다고 한다
 
 >-> 위의 install 커맨드에 `--force` 를 추가해서 충돌이 일어난 peer dependency를 강제 설치하거나 `--legacy-peer-deps`로 자동설치를 막는 방법이 있다. 나는 `--force`로 설치했다.
 
@@ -112,8 +112,7 @@ npm run deploy
 를 실행한다.   
    
 >[Trouble Shooting]   
->나는 위 커맨드를 실행하면 Segment Fault오류가 발생했는데 이럴때는 
-`npm rebuild`로 npm을 다시 빌드하거나 `npm run clean`으로 캐쉬를 삭제 한후 다시 위 커맨드를 실행해주면 된다.
+>위 커맨드를 실행했을 때 Segmentation Fault오류가 발생했는데 잘못된 메모리 접근이라는 오류였기 때문에 `npm run clean`으로 캐쉬를 삭제 한후 다시 위 커맨드를 실행해주었다.
 
 이후
 Github repository의 Settings-Pages
