@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
-Sitemap: https://master--hiyen.netlify.app/sitemap-index.xml
-Host: https://master--hiyen.netlify.app
+Sitemap: https://jinkshower.github.io/sitemap-index.xml
+Host: https://jinkshower.github.io
