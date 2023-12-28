@@ -1,4 +1,62 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of Hiyen]]></title><description><![CDATA[Hello :) I'm Hiyen, a backend developer!]]></description><link>https://jinkshower.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 28 Dec 2023 11:44:11 GMT</lastBuildDate><item><title><![CDATA[Gatsby와 Github Pages로 개인 블로그 만들기]]></title><description><![CDATA[Gatsby로 Github pages 개인 블로그 만들기 TIL을 적는 블로그와 기술블로그를 분리하고 싶어서 따로 웹사이트 만들 방법을 찾다가 github pages과 연동하여 손쉽게 웹사이트를 만들 수 있는 SSG…]]></description><link>https://jinkshower.github.io/gatsby_website/</link><guid isPermaLink="false">https://jinkshower.github.io/gatsby_website/</guid><pubDate>Tue, 26 Dec 2023 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Gatsby로 Github pages 개인 블로그 만들기&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of Hiyen]]></title><description><![CDATA[Hello :) I'm Hiyen, a backend developer!]]></description><link>https://jinkshower.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 28 Dec 2023 11:59:15 GMT</lastBuildDate><item><title><![CDATA[프로세스]]></title><description><![CDATA['혼자 공부하는 시스템구조&운영체제'를 읽고 공부한 내용 프로세스 Process? Program? 우리는 흔히  라고 말한다.
+이는 '보조기억장치에 있는 데이터 뭉치'인 을  '메모리에 적재하고 cpu가 실행'하여 화 한다와 같은 말이다.  PCB…]]></description><link>https://jinkshower.github.io/process_thread/</link><guid isPermaLink="false">https://jinkshower.github.io/process_thread/</guid><pubDate>Thu, 28 Dec 2023 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;&apos;혼자 공부하는 시스템구조&amp;#x26;운영체제&apos;를 읽고 공부한 내용&lt;/p&gt;
+&lt;h2&gt;프로세스&lt;/h2&gt;
+&lt;h3&gt;Process? Program?&lt;/h3&gt;
+&lt;p&gt;우리는 흔히 &lt;code class=&quot;language-text&quot;&gt;프로그램을 실행한다&lt;/code&gt; 라고 말한다.
+이는 &apos;보조기억장치에 있는 데이터 뭉치&apos;인 &lt;code class=&quot;language-text&quot;&gt;프로그램&lt;/code&gt;을  &apos;메모리에 적재하고 cpu가 실행&apos;하여 &lt;code class=&quot;language-text&quot;&gt;프로세스&lt;/code&gt;화 한다와 같은 말이다. &lt;/p&gt;
+&lt;h3&gt;PCB Process Control Block&lt;/h3&gt;
+&lt;p&gt;모든 프로세스는 CPU를 사용해야 하지만 CPU의 자원은 한정적이다.
+그래서 프로세스의 실행 순서와 자원관리를 위해 프로세스마다 &lt;code class=&quot;language-text&quot;&gt;PCB&lt;/code&gt;라는 부가 정보를 Kernel 영역에 프로세스과 함께 저장한다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;[PCB에 저장되는 정보]&lt;br&gt;
+PID(Process ID) : 프로세스 고유의 번호
+Registers: 레지스터의 중간값&lt;br&gt;
+Process state: 대기,준비, 실행 등의 프로세스 상태
+CPU scheduling information : 언제, 어떤 순서로 cpu 할당 받을지의 정보&lt;br&gt;
+Memory: 프로세스의 메모리 적재 주소, 베이스 레지스터, 한계 레지스터, 페이지 테이블
+List of Open files : 입출력장치 정보&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3&gt;이 PCB로 어떻게 관리하나?&lt;/h3&gt;
+&lt;p&gt;CPU는 하나의 프로세스를 처음부터 끝까지 실행하고 다음 프로세스로 넘어가는 게 아니라 여러개의 프로세스를 일부씩 실행한다. &lt;/p&gt;
+&lt;p&gt;이 때 한 프로세스의 작업을 멈추고 그 작업까지의 중간 값(프로그램 카운터, 각종 레지스터 값 등)을 필수적으로 저장해야 하는데 이것을 PCB에 저장하는 것이다. &lt;/p&gt;
+&lt;p&gt;이 중간 정보는 &lt;code class=&quot;language-text&quot;&gt;문맥Context&lt;/code&gt;으로 추상화하여 표현되고 기존 프로세스의 문맥을 백업하고 다음 프로세스의 문맥을 읽어서 실행하는 것을 &lt;code class=&quot;language-text&quot;&gt;문맥 교환 Context Switching&lt;/code&gt; 이라고 한다.
+(이 문맥 교환의 속도가 빨라지면 프로세스들은 동시에 실행되는 것처럼 보인다)&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;[동시에 실행되는 것 &apos;처럼&apos; 보인다]&lt;br&gt;
+프로세스간의 문맥교환으로 동시에 실행되는 것처럼 보인다는 것은 동시성(Concurrency)를 의미한다.&lt;br&gt;
+정말 동시에 실행되는 것은  CPU의 다수 코어에 의한 병렬성(Parallelism)을 의미한다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;프로세스의 구성&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;정적 할당 영역&lt;/code&gt;&lt;br&gt;
+코드 영역Code Segment : 기계어로 이루어진 명령어. Read-Only&lt;/p&gt;
+&lt;p&gt;데이터 영역 Data Segment : 프로그램 실행 동안 유지되는 데이터
+ex) 전역변수, 상수&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;동적 할당 영역&lt;/code&gt;&lt;br&gt;
+힙 영역 Heap Segment : 프로그래머가 직접 할당할 수 있는 저장 공간
+ex)생성자, 인스턴스 (C에서 malloc()과 free()로 관리하는 영역) &lt;/p&gt;
+&lt;p&gt;스택 영역 Stack Segment : 함수의 호출에 의해 할당되고 함수 종료시 소멸하는 데이터
+ex)매개변수, 지역변수 &lt;/p&gt;
+&lt;p&gt;&lt;em&gt;즉, PCB가 있는 커널영역과 사용자 영역을 구성하는 위 네가지 영역으로 프로세스가 구성된다&lt;/em&gt;&lt;/p&gt;
+&lt;h2&gt;프로세스의 상태&lt;/h2&gt;
+&lt;p&gt;프로세스는 번갈아 실행되는 과정에서 여러 상태를 거치는데, 이 상태를 cpu는 알아야 한다.
+입출력장치를 사용하는 프로세스의 경우 입력 완료 인터럽트를 기다려야 실행할 수 있는 경우가 있고, 실행이 끝난 프로세스는 메모리를 반환해야 하기 때문이다.
+그래서 운영체제는 PCB에 프로세스의 상태를 저장하고 이를 읽어낸다. &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;생성 상태(new)&lt;/li&gt;
+&lt;li&gt;준비 상태(ready)&lt;/li&gt;
+&lt;li&gt;대기상태(blocked) &lt;/li&gt;
+&lt;li&gt;실행상태(running)&lt;/li&gt;
+&lt;li&gt;종료상태(terminated)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;준비상태 vs 대기상태&lt;/code&gt;&lt;br&gt;
+준비상태는 cpu에서 메모리를 할당받으면 실행할 수 있는 상태를 의미한다.
+준비상태에서 실행상태가 되는 것을 &lt;strong&gt;dispatch&lt;/strong&gt;라고 한다 &lt;/p&gt;
+&lt;p&gt;대기상태는 입출력 장치의 완료 신호(인터럽트)를 기다리는 등 특정 이벤트의 발생을 기다리는 상태를 의미한다. 대기상태에서 이벤트가 완료되면 &lt;strong&gt;준비상태&lt;/strong&gt;가 된다. &lt;/p&gt;
+&lt;h2&gt;스레드&lt;/h2&gt;
+&lt;h3&gt;프로세스와 스레드&lt;/h3&gt;
+&lt;p&gt;스레드는 &lt;code class=&quot;language-text&quot;&gt;프로세스를 구성하는 실행 단위&lt;/code&gt;를 의미한다
+스레드는 프로세스의 자원을 공유하며 여러개가 존재 할 수 있다.
+스레드들은 위에서 살펴 본 프로세스의 스택 영역에 존재하며 프로세스의 코드,데이터, 힙영역을 다른 스레드들과 공유할 수 있다. &lt;/p&gt;</content:encoded></item><item><title><![CDATA[Gatsby와 Github Pages로 개인 블로그 만들기]]></title><description><![CDATA[Gatsby로 Github pages 개인 블로그 만들기 TIL을 적는 블로그와 기술블로그를 분리하고 싶어서 따로 웹사이트 만들 방법을 찾다가 github pages과 연동하여 손쉽게 웹사이트를 만들 수 있는 SSG…]]></description><link>https://jinkshower.github.io/gatsby_website/</link><guid isPermaLink="false">https://jinkshower.github.io/gatsby_website/</guid><pubDate>Tue, 26 Dec 2023 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Gatsby로 Github pages 개인 블로그 만들기&lt;/h2&gt;
 &lt;p&gt;TIL을 적는 블로그와 기술블로그를 분리하고 싶어서 따로 웹사이트 만들 방법을 찾다가 github pages과 연동하여 손쉽게 웹사이트를 만들 수 있는 SSG 프레임워크를 찾게 되었다. 여러가지가 있지만 가장 많이 쓰이는 것들은 &lt;code class=&quot;language-text&quot;&gt;Jekyll&lt;/code&gt; 과 &lt;code class=&quot;language-text&quot;&gt;Gatsby&lt;/code&gt; 이다. &lt;/p&gt;
 &lt;p&gt;처음에는 &lt;code class=&quot;language-text&quot;&gt;Jekyll&lt;/code&gt;로 웹사이트를 만들었지만 몇 가지 고치고 싶은 사항들이 보였는데 나는 Ruby를 잘 모르기 때문에 내가 나중에 커스텀하기에 조금 무리가 있는 것 같아 &lt;code class=&quot;language-text&quot;&gt;Gatsby&lt;/code&gt;로 프레임워크를 바꾸게 되었다.&lt;/p&gt;
 &lt;p&gt;나는 미리 만들어진 &lt;a href=&quot;https://github.com/devHudi/gatsby-starter-hoodie&quot;&gt;테마&lt;/a&gt; 를 사용했다.(감사합니다)&lt;/p&gt;
