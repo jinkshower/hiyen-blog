@@ -1,6 +1,6 @@
 ---
-title: "프로세스"
-description: "프로세스 공부 기록"
+title: "프로세스와 스레드"
+description: "프로세스,스레드 공부 기록"
 date: 2023-12-28
 update: 2023-12-28
 tags:
