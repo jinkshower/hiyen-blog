@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of Hiyen]]></title><description><![CDATA[Hello :) I'm Hiyen, a backend developer!]]></description><link>https://jinkshower.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 29 Dec 2023 03:14:04 GMT</lastBuildDate><item><title><![CDATA[프로세스와 스레드]]></title><description><![CDATA['혼자 공부하는 시스템구조&운영체제'를 읽고 공부한 내용 프로세스 Process? Program? 우리는 흔히  라고 말한다.
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of Hiyen]]></title><description><![CDATA[Hello :) I'm Hiyen, a backend developer!]]></description><link>https://jinkshower.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sat, 30 Dec 2023 03:49:52 GMT</lastBuildDate><item><title><![CDATA[프로세스와 스레드]]></title><description><![CDATA['혼자 공부하는 시스템구조&운영체제'를 읽고 공부한 내용 프로세스 Process? Program? 우리는 흔히  라고 말한다.
 이는 '보조기억장치에 있는 데이터 뭉치'인 을  '메모리에 적재하고 cpu가 실행'하여 화 한다와 같은 말이다.  PCB…]]></description><link>https://jinkshower.github.io/process_thread/</link><guid isPermaLink="false">https://jinkshower.github.io/process_thread/</guid><pubDate>Thu, 28 Dec 2023 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;&apos;혼자 공부하는 시스템구조&amp;#x26;운영체제&apos;를 읽고 공부한 내용&lt;/p&gt;
 &lt;h2&gt;프로세스&lt;/h2&gt;
 &lt;h3&gt;Process? Program?&lt;/h3&gt;
@@ -58,21 +58,10 @@ ex)매개변수, 지역변수 &lt;/p&gt;
 스레드는 &lt;strong&gt;프로세스의 자원&lt;/strong&gt;을 공유하며 여러개가 존재 할 수 있다.
 스레드들은 위에서 살펴 본 프로세스의 스택 영역에 존재하며 프로세스의 코드,데이터, 힙영역을 다른 스레드들과 공유할 수 있다. &lt;/p&gt;
 &lt;h3&gt;멀티스레드&lt;/h3&gt;
-&lt;p&gt;멀티스레드는 &lt;code class=&quot;language-text&quot;&gt;문맥 교환&lt;/code&gt;으로 동시성을 획득하는 멀티프로세스와 다르게&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;병렬성을 가지고 실제로 동시에 수행될 수 있다. &lt;/li&gt;
-&lt;li&gt;한 프로세스 내에서 필요한 자원을 공유하기 때문에 새로운 프로세스를 실행하는 것보다 효율적으로 메모리를 관리할 수 있다.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;하지만 이러한 장점들은 단점이 될 수도 있다.&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;동시에 수행될 수 있다는 것은 동기화 문제를 내재한다&lt;/li&gt;
-&lt;li&gt;자원을 공유한다는 것은 한 스레드의 오류가 다른 스레드에 영향을 미칠 수 있음을 의미한다 &lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;이중 첫번째 단점을 조금 더 자세히 서술하겠다.&lt;/p&gt;
-&lt;h3&gt;멀티 스레드의 동기화 문제&lt;/h3&gt;
-&lt;p&gt;운영체제는 여러개의 프로세스의 실행을 관리한다고 말했는데, 이는 운영체제에 &lt;code class=&quot;language-text&quot;&gt;CPU 스케쥴링&lt;/code&gt; 알고리즘이 존재한다는 것을 의미한다.
-그러나 멀티스레드는 A,B 스레드 중 어떤 스레드가 먼저 실행될지 결정 되어 있지 않다.
-간단한 예제로 알아보자&lt;/p&gt;
+&lt;p&gt;멀티프로세스와 비슷하게 스레드 또한 문맥교환을 하며 동시성을 가지고 처리된다. &lt;/p&gt;
+&lt;p&gt;멀티스레드는 한 프로세스 내에서 필요한 자원을 공유하기 때문에 새로운 프로세스를 실행하는 것보다 효율적으로 메모리를 관리할 수 있다.&lt;/p&gt;
+&lt;p&gt;하지만 자원을 공유한다는 것은 한 스레드의 오류가 다른 스레드에 영향을 미칠 수 있음을 의미한다&lt;/p&gt;
+&lt;h3&gt;프로세스와 스레드의 동기화 문제&lt;/h3&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Calculator&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;  
     &lt;span class=&quot;token keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;int&lt;/span&gt; count &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
   
@@ -87,16 +76,19 @@ ex)매개변수, 지역변수 &lt;/p&gt;
         &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;  
     &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;  
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;얼핏 보면 문제가 없어보이지만 &lt;/p&gt;
+&lt;p&gt;위 코드는 얼핏 보면 문제가 없어보이지만 &lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;1
 3
 4
 2
 5
 6&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;실행 결과는 이렇게 뒤죽박죽인채로 출력된다.
-이렇게 같은 전역변수에 스레드가 무분별한 순서로 접근하거나, 정해진 순서대로 실행되어야 할 스레드가 순서대로 실행되지 않는 문제를 &lt;code class=&quot;language-text&quot;&gt;Synchronization Issue&lt;/code&gt; 라고 한다. &lt;/p&gt;
-&lt;p&gt;-&gt; 이를 해결하기 위한 다양한 방법이 있는데 자세한 내용은 다른 글에서 다룰 예정이다. &lt;/p&gt;</content:encoded></item><item><title><![CDATA[Gatsby와 Github Pages로 개인 블로그 만들기]]></title><description><![CDATA[Gatsby로 Github pages 개인 블로그 만들기 TIL을 적는 블로그와 기술블로그를 분리하고 싶어서 따로 웹사이트 만들 방법을 찾다가 github pages과 연동하여 손쉽게 웹사이트를 만들 수 있는 SSG…]]></description><link>https://jinkshower.github.io/gatsby_website/</link><guid isPermaLink="false">https://jinkshower.github.io/gatsby_website/</guid><pubDate>Tue, 26 Dec 2023 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Gatsby로 Github pages 개인 블로그 만들기&lt;/h2&gt;
+&lt;p&gt;실행결과는 뒤죽박죽인채로 나온다.&lt;br&gt;
+이렇게 같은 전역변수에 스레드가 무분별한 순서로 접근하거나, 정해진 순서대로 실행되어야 할 스레드가 순서대로 실행되지 않는 때 이 멀티 스레드는 &apos;&lt;code class=&quot;language-text&quot;&gt;Synchronization Issue&lt;/code&gt;를 가진다&apos;라고 한다.&lt;/p&gt;
+&lt;h3&gt;프로세스 동기화 문제? 스레드 동기화 문제?&lt;/h3&gt;
+&lt;p&gt;둘 다 동기화 문제를 가질 수 있다.&lt;br&gt;
+위 예시에서는 스레드의 동기화를 사용했지만 &lt;code class=&quot;language-text&quot;&gt;실행의 흐름&lt;/code&gt;을 가지는 모든 것들이 동기화 문제를 내재하고 있다.   &lt;/p&gt;
+&lt;p&gt;예를 들어 &lt;code class=&quot;language-text&quot;&gt;Book.txt&lt;/code&gt;를 쓰는 프로세스 A와 같은 파일을 읽는 프로세스 B가 있다면 두 프로세스가 공유자원에 접근할 수 있다는 것이고 &lt;code class=&quot;language-text&quot;&gt;A-&gt;B&lt;/code&gt;의 정해진 순서대로 실행되어야 하기 때문이다. &lt;/p&gt;</content:encoded></item><item><title><![CDATA[Gatsby와 Github Pages로 개인 블로그 만들기]]></title><description><![CDATA[Gatsby로 Github pages 개인 블로그 만들기 TIL을 적는 블로그와 기술블로그를 분리하고 싶어서 따로 웹사이트 만들 방법을 찾다가 github pages과 연동하여 손쉽게 웹사이트를 만들 수 있는 SSG…]]></description><link>https://jinkshower.github.io/gatsby_website/</link><guid isPermaLink="false">https://jinkshower.github.io/gatsby_website/</guid><pubDate>Tue, 26 Dec 2023 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Gatsby로 Github pages 개인 블로그 만들기&lt;/h2&gt;
 &lt;p&gt;TIL을 적는 블로그와 기술블로그를 분리하고 싶어서 따로 웹사이트 만들 방법을 찾다가 github pages과 연동하여 손쉽게 웹사이트를 만들 수 있는 SSG 프레임워크를 찾게 되었다. 여러가지가 있지만 가장 많이 쓰이는 것들은 &lt;code class=&quot;language-text&quot;&gt;Jekyll&lt;/code&gt; 과 &lt;code class=&quot;language-text&quot;&gt;Gatsby&lt;/code&gt; 이다. &lt;/p&gt;
 &lt;p&gt;처음에는 &lt;code class=&quot;language-text&quot;&gt;Jekyll&lt;/code&gt;로 웹사이트를 만들었지만 몇 가지 고치고 싶은 사항들이 보였는데 나는 Ruby를 잘 모르기 때문에 내가 나중에 커스텀하기에 조금 무리가 있는 것 같아 &lt;code class=&quot;language-text&quot;&gt;Gatsby&lt;/code&gt;로 프레임워크를 바꾸게 되었다.&lt;/p&gt;
 &lt;p&gt;나는 미리 만들어진 &lt;a href=&quot;https://github.com/devHudi/gatsby-starter-hoodie&quot;&gt;테마&lt;/a&gt; 를 사용했다.(감사합니다)&lt;/p&gt;
