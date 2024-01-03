@@ -1,4 +1,96 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of Hiyen]]></title><description><![CDATA[Hello :) I'm Hiyen, a backend developer!]]></description><link>https://jinkshower.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sat, 30 Dec 2023 03:49:52 GMT</lastBuildDate><item><title><![CDATA[프로세스와 스레드]]></title><description><![CDATA['혼자 공부하는 시스템구조&운영체제'를 읽고 공부한 내용 프로세스 Process? Program? 우리는 흔히  라고 말한다.
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of Hiyen]]></title><description><![CDATA[Hello :) I'm Hiyen, a backend developer!]]></description><link>https://jinkshower.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Wed, 03 Jan 2024 03:21:41 GMT</lastBuildDate><item><title><![CDATA[웹 서비스 캐시]]></title><description><![CDATA['모든 개발자를 위한 HTTP'강의를 수강한 학습 기록 캐시란? 컴퓨터과학분야에서 데이터나 값을 미리 복사해 놓는 임시장소를 의미한다
+CPU에서 캐시메모리는 CPU…]]></description><link>https://jinkshower.github.io/http_cache/</link><guid isPermaLink="false">https://jinkshower.github.io/http_cache/</guid><pubDate>Wed, 03 Jan 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;&apos;모든 개발자를 위한 HTTP&apos;강의를 수강한 학습 기록&lt;/p&gt;
+&lt;h2&gt;캐시란?&lt;/h2&gt;
+&lt;p&gt;컴퓨터과학분야에서 데이터나 값을 미리 복사해 놓는 임시장소를 의미한다
+CPU에서 캐시메모리는 CPU, 메모리 사이에 위치하여 자주 쓰이는 데이터를 임시로 저장하여 둘 사이의 거리에 따른 접근시간을 줄이는데 사용된다. &lt;/p&gt;
+&lt;p&gt;캐시는 다양한 종류가 있지만 웹에서의 캐시도 CPU의 캐시 메모리와 비슷하게 &lt;code class=&quot;language-text&quot;&gt;자주 쓰이는 데이터를 가까운 곳에 저장하여 데이터 접근 시간을 줄인다&lt;/code&gt; 는 원리를 가진다.&lt;/p&gt;
+&lt;h2&gt;웹 브라우저 캐시&lt;/h2&gt;
+&lt;p&gt;클라이언트에서 서버에 요청하여 10mb의 코끼리 이미지를 다운로드 받는다고 생각해보자.    &lt;/p&gt;
+&lt;p&gt;캐시가 없다면 첫번째 요청에서는 10mb의 데이터를 전송받아야하지만 같은 사이트에 몇번이고 방문한다면 여러번의 요청마다 10mb의 데이터를 매번 다운로드 받아야 한다. 이러면 웹페이지의 로딩 속도는 매우 느려지고 좋지 않은 사용자 경험을 선사한다.&lt;/p&gt;
+&lt;p&gt;반면 웹 브라우저를 사용하는 사용자의 로컬 환경에 캐시데이터를 저장하고 사용자가 같은 요청(코끼리 그림을 브라우저에 그려주세요)을 할 때는 서버에서 다운로드를 다시 받지 않고 캐시데이터를 바로 사용한다면 웹 페이지의 로딩 속도는 비약적으로 상승할 것이다. &lt;/p&gt;
+&lt;h3&gt;웹 브라우저 캐시 적용&lt;/h3&gt;
+&lt;p&gt;웹 브라우저에서 서버로 코끼리 그림을 최초로 요청하면 서버는 이에 대해&lt;code class=&quot;language-text&quot;&gt;cache-control: max-age&lt;/code&gt; 헤더를 포함한 응답을 준다.&lt;/p&gt;
+&lt;p&gt;간단한 응답예시&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;HTTP/1.1 200 OK
+Content-Type:image/jpeg
+Cache-Control: max-age=60
+Content-Length: 10295
+
+//
+{elephant image data}
+//&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;이때 &lt;code class=&quot;language-text&quot;&gt;max-age&lt;/code&gt; 에 해당하는 숫자는 이 캐시가 유효한 초단위를 의미한다.&lt;/p&gt;
+&lt;p&gt;즉 이 코끼리 그림은 로컬의 캐시 저장소에서 60초간 유효하며 이 시간안에 클라이언트가 코끼리 그림을 다시 요청하면 서버에서 다시 코끼리 그림 데이터를 다운받는 게 아니라 캐시 저장소에 있는 복사된 데이터를 브라우저에서 렌더링 하게 되는 것이다.&lt;/p&gt;
+&lt;h3&gt;캐시 유효기간&lt;/h3&gt;
+&lt;p&gt;당연히 캐시 유효기간이 지난 데이터의 경우 서버에 재요청을 하여 다시 다운로드 받아야 한다. 이 때 유효기간이 지난 캐시를 Stale하다라고 표현한다.    &lt;/p&gt;
+&lt;p&gt;하지만 캐시 유효 기간이 지났지만 서버의 원본 데이터가 변경되지 않은 경우, 같은 데이터인데도 다시 다운로드 받아야 하면 이는 굉장히 비효율적이다. 이를 위해 캐시와 원본이 같은 데이터인지 검증하고, 같은 데이터라면 캐시를 사용하는 절차가 필요하다.&lt;/p&gt;
+&lt;h2&gt;캐시 유효성검증(Validation)과 조건부 요청(Conditional Request)&lt;/h2&gt;
+&lt;p&gt;캐시 데이터가 원본 데이터와 같은지 검증하기 위해 크게 두가지 방법을 사용한다&lt;/p&gt;
+&lt;h3&gt;Last-Modified / If-Modified-Since&lt;/h3&gt;
+&lt;p&gt;첫 번재 방법은 원본 데이터가 마지막으로 수정된 시간을 응답 메시지 헤더로 추가하는 방법이다. &lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;HTTP/1.1 200 OK
+Content-Type:image/jpeg
+Cache-Control: max-age=60
+Last-Modified: Wed, 21 Oct 2015 07:28:00 GMT //added
+Content-Length: 10295
+
+//
+{elephant image data}
+//&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;이제 캐시 저장소에 코끼리 그림과 이 원본 데이터가 마지막으로 수정된 시각까지 저장을 하게 된다. 이제 클라이언트는 요청을 할때 &lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;GET /elephant.jpg
+if-modified-since: Wed, 21 Oct 2015 07:28:00 GMT&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&apos;이 이후로 원본이 수정되었으면&apos; 이라는  조건부 요청을 보내고 서버에서는 이러한 조건부 요청에 따라&lt;br&gt;
+조건이 만족하면(수정 되었으면) 200 OK로 다시 10mb의 코끼리 그림을 전송하고 조건을 불만족하면(수정 되지 않았다면 )&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;HTTP/1.1 304 Not Modified
+Content-Type:image/jpeg
+Cache-Control: max-age=60
+Last-Modified: Wed, 21 Oct 2015 07:28:00 GMT //added
+Content-Length: 10295
+
+//
+
+//&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;10mb의 message body가 생략된 304 Not Modified의 응답 메시지를 보낸다. &lt;/p&gt;
+&lt;p&gt;위 방법은 합리적으로 보이지만 단점도 가지고 있다&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;1초 미만 단위로 캐시 조정이 불가능하고&lt;/li&gt;
+&lt;li&gt;A-&gt;B-&gt;A 처럼 원본데이터가 수정되었지만 수정 전과 같은 데이터 일때&lt;/li&gt;
+&lt;li&gt;스페이스, 주석 변경처럼 크게 영향이 없는 경우
+에도 모두 재다운로드가 발생하기 때문이다.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3&gt;ETag / If-None-Match&lt;/h3&gt;
+&lt;p&gt;위의 단점을 보완하고 캐시 로직을 서버에서 관리하고 싶을 때 ETag(Entity Tag)를 이용하게 된다 .
+ETag는 각각의 캐시될 원본 데이터에 해쉬코드를 달아준다고 생각하면 된다. 데이터가 변경되고 이 데이터가 클라이언트에서 다시 다운로드 받아야 된다고 판단될 때 ETag를 변경해주면 된다. &lt;/p&gt;
+&lt;p&gt;서버는 최초 응답 메시지에 코끼리 데이터와 함께 ETag를 제공한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;HTTP/1.1 200 OK
+Content-Type:image/jpeg
+Cache-Control: max-age=60
+ETag: &quot;aaaaaaa&quot; //added
+Content-Length: 10295
+
+//
+{elephant image data}
+//&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;캐시 저장소는 이제 코끼리 그림 데이터를 ETag와 함께 저장하고 &lt;/p&gt;
+&lt;p&gt;재요청시 조건부 요청을 보내게 된다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;GET /elephant.jpg
+if-none-match: &quot;aaaaaaa&quot;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;위와 마찬가지로 조건을 불만족하면(수정 되지 않았다면 ) 서버는 304 상태코드와 메시지 바디가 없는 응답 메시지를 보내고 클라이언트는 캐시 저장소에 있는 코끼리 그림을 웹 브라우저에 렌더링한다.&lt;/p&gt;
+&lt;h2&gt;캐시 지시어&lt;/h2&gt;
+&lt;p&gt;캐시를 제어하는 방법은 위의 방법만 있는 게 아니다. 항상 최신이 되어야 하는 데이터나 개인정보 처럼 캐시를 해서는 안되는 데이터도 있기 때문이다.&lt;/p&gt;
+&lt;p&gt;Cache-directive(캐시 지시어)로 해당 데이터의 캐시가 어떻게 적용될지 설정할 수 있다. &lt;/p&gt;
+&lt;h3&gt;Cache-Control: no-cache&lt;/h3&gt;
+&lt;p&gt;데이터를 캐시해도 되지만 항상 Origin서버에 검증하고 사용되어야 하는 데이터다. 즉, 항상 최신의 데이터를 가지게 하고 싶을 때 사용한다&lt;/p&gt;
+&lt;h3&gt;Cache-Control: no-store&lt;/h3&gt;
+&lt;p&gt;민감한 정보가 포함된 데이터이므로 캐시해서는 안된다.&lt;/p&gt;
+&lt;h3&gt;Cache-Control: must-revalidate&lt;/h3&gt;
+&lt;p&gt;캐시 만료 후 최초조회시 Origin서버에 검증해야한다
+Origin 서버 접근 실패시 반드시 오류가 발생해야한다.&lt;/p&gt;
+&lt;h3&gt;Cache-Control: public&lt;/h3&gt;
+&lt;p&gt;응답이 public 캐시에 저장되어도 된다 (프록시 서버에 저장되어도 된다)&lt;/p&gt;
+&lt;h3&gt;Cache-Control: private&lt;/h3&gt;
+&lt;p&gt;응답이 해당 사용자 만을 위한 것 private 캐시에 저장해야함(기본값)&lt;/p&gt;</content:encoded></item><item><title><![CDATA[프로세스와 스레드]]></title><description><![CDATA['혼자 공부하는 시스템구조&운영체제'를 읽고 공부한 내용 프로세스 Process? Program? 우리는 흔히  라고 말한다.
 이는 '보조기억장치에 있는 데이터 뭉치'인 을  '메모리에 적재하고 cpu가 실행'하여 화 한다와 같은 말이다.  PCB…]]></description><link>https://jinkshower.github.io/process_thread/</link><guid isPermaLink="false">https://jinkshower.github.io/process_thread/</guid><pubDate>Thu, 28 Dec 2023 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;&apos;혼자 공부하는 시스템구조&amp;#x26;운영체제&apos;를 읽고 공부한 내용&lt;/p&gt;
 &lt;h2&gt;프로세스&lt;/h2&gt;
 &lt;h3&gt;Process? Program?&lt;/h3&gt;
