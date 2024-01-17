@@ -1,6 +1,6 @@
 module.exports = {
   title: "Hiyen",
-  description: "Hello :) I'm Hiyen, a backend developer!",
+  description: "Always want to write sometimes",
   author: "Hiyen",
   siteUrl: "https://jinkshower.github.io/",
   links: {
