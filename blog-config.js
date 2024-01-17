@@ -7,7 +7,7 @@ module.exports = {
     github: "https://github.com/jinkshower"
   },
   utterances: {
-    repo: "devHudi/gatsby-starter-hoodie",
+    repo: "jinkshower/jinkshower.github.io",
     type: "pathname",
   },
 }
