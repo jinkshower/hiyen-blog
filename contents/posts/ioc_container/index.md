@@ -10,7 +10,7 @@ tags:
 series: "spring"
 ---
 
-의존성 주입(DI)[포스팅](https://jinkshower.github.io/dependency_injection/")에서 이어지는 내용입니다.
+의존성 주입(DI)[포스팅](https://jinkshower.github.io/dependency_injection/)에서 이어지는 내용입니다.
 
 ## Inversion of Control (제어의 역전) 이란?
 
