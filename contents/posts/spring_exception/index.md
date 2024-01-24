@@ -16,6 +16,15 @@ series: "spring"
 
 개인 과제를 진행하는 도중 Entity를 수정할때 비밀번호가 다를 경우 예외를 던지는 코드를 작성하게 되었다.
 ```java
+@Transactional
+public ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto scheduleRequestDto) {
+    Schedule schedule = findSchedule(id);
+    validatePassword(schedule.getPassword(), scheduleRequestDto.getPassword());
+
+    schedule.update(scheduleRequestDto);
+    return new ScheduleResponseDto(schedule);
+}
+
 private void validatePassword(String origin, String input) {  
     if(!origin.equals(input)) {  
         throw new IllegalArgumentException("[ERROR] 패스워드가 다릅니다");  
@@ -33,16 +42,16 @@ private void validatePassword(String origin, String input) {
 ## 첫 시도, Early Return
 
 ```java
-    @Transactional  
-    public ResponseEntity<String> updateSchedule(Long id, ScheduleRequestDto requestDto) {  
-        Schedule schedule = findSchedule(id);  
-        if (!schedule.getPassword().equals(requestDto.getPassword())) {  
-            return ResponseEntity.badRequest().body("비밀번호가 다릅니다");  
-        }   // early return
-  
-        schedule.update(requestDto);  
-        return ResponseEntity.ok().body("수정 완료!");  
-    }
+@Transactional  
+public ResponseEntity<String> updateSchedule(Long id, ScheduleRequestDto requestDto) {  
+    Schedule schedule = findSchedule(id);  
+    if (!schedule.getPassword().equals(requestDto.getPassword())) {  
+        return ResponseEntity.badRequest().body("비밀번호가 다릅니다");  
+    }   // early return
+
+    schedule.update(requestDto);  
+    return ResponseEntity.ok().body("수정 완료!");  
+}
 ```
 수정하는 메서드에서 검증을 진행하고, 비밀번호가 다를 경우 상태코드와 함께 메시지를 전달하게 바꾸어 보았다.
 
@@ -51,7 +60,7 @@ private void validatePassword(String origin, String input) {
 2. 검증 로직에 변경이 있을 경우 응답객체의 생성방식도 변경해야 한다.
 3. 더불어 Service에서 응답객체를 만들기 때문에 Controller의 역할이 희미해진다 (싱크홀 안티패턴의 가능성)
 
-## 두번째 시도, ResponseStatusException 이용하기
+## 두번째 시도, ResponseStatusException
 
 ```java
 private void validatePassword(String origin, String input) {  
