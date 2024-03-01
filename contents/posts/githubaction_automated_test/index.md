@@ -86,7 +86,7 @@ Runner 서버에 JDK를 설치한다.
 `Publish Unit Test Results`
 
 다른 사람이 만든 workflow설정도 쓸 수 있다. [링크](https://github.com/EnricoMi/publish-unit-test-result-action)
-테스트 결과를 읽기 쉬운 로그로 게시해준다. 
+테스트 결과를 읽기 쉬운 로그로 게시해준다.
 
 하지만... 
 ![Pasted image 20240219161225](https://github.com/jinkshower/jinkshower.github.io/assets/135244018/1f76a31c-2e77-4ce2-bf41-818fdf1fda07)
