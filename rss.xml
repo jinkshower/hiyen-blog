@@ -1,4 +1,96 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of Hiyen]]></title><description><![CDATA[Always want to write sometimes]]></description><link>https://jinkshower.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 25 Feb 2024 13:37:51 GMT</lastBuildDate><item><title><![CDATA[Slice Test]]></title><description><![CDATA[인수테스트 에서 이어지는 글입니다. Slice Test Slice Test는 레이어별로 잘라서 레이어를 하나의 단위로 보는 테스트이다. 왜 Slice Test를 해야 하는가? 개별 레이어의 검증
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of Hiyen]]></title><description><![CDATA[Always want to write sometimes]]></description><link>https://jinkshower.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 01 Mar 2024 14:48:24 GMT</lastBuildDate><item><title><![CDATA[Github Actions 를 통한 테스트 자동화 구축]]></title><description><![CDATA[팀 프로젝트를 진행하면서 Github Actions를 통해 테스트 자동화 환경을 구축한 기록 코드 보러가기 학습 계기 팀프로젝트를 진행하면서 팀원들끼리 테스트 코드를 작성했지만, 이를 PR…]]></description><link>https://jinkshower.github.io/githubaction_automated_test/</link><guid isPermaLink="false">https://jinkshower.github.io/githubaction_automated_test/</guid><pubDate>Fri, 01 Mar 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;팀 프로젝트를 진행하면서 Github Actions를 통해 테스트 자동화 환경을 구축한 기록&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/jinkshower/please-praise&quot;&gt;코드&lt;/a&gt; 보러가기&lt;/p&gt;
+&lt;h2&gt;학습 계기&lt;/h2&gt;
+&lt;p&gt;팀프로젝트를 진행하면서 팀원들끼리 테스트 코드를 작성했지만, 이를 PR에서 확인할 수 있는 방법이 없었다. &lt;/p&gt;
+&lt;p&gt;물론 팀원들을 믿고 있지만,  나조차도 급할때는 테스트를 돌리는 걸 까먹고 push를 한 기억도 있기 때문이다.. &lt;/p&gt;
+&lt;p&gt;Github Actions를 통하면 PR마다 혹은 push마다 테스트를 자동화할 수 있는 workflow를 설정할 수 있다.&lt;/p&gt;
+&lt;h2&gt;테스트 자동화의 필요성&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;제 로컬에서는 잘 돌아가는데요..?&lt;/code&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;환경 일관성 보장
+각자의 로컬이 아닌 독립된 (Github Actions의 경우 Runner 서버) 환경에서 테스트가 실행되기 때문에 환경 관련 문제를 사전에 감지 할 수 있다.
+즉, 배포 환경에 맞는 빌드/테스트 환경을 구축하는데 큰 도움이 된다&lt;/li&gt;
+&lt;li&gt;커밋 이후 안전성 확인 가능
+위에서도 말했지만 PR에 &lt;code class=&quot;language-text&quot;&gt;테스트 다 통과해요~&lt;/code&gt; 라는 말로는 PR에 올라온 코드는 믿을 수 없다. 독립된 환경에서 모든 테스트가 통과하는 코드라면, 안심하고 Approve를 누를 수 있게 도와준다. &lt;/li&gt;
+&lt;li&gt;테스트 실패를 팀 모두가 알 수 있음
+테스트 자동화 환경이 구축된 협업에서는 참여하는 모두가 테스트 실패시 에러로그를 공유할 수 있기 때문에 디버깅을 모두가 빠르게 할 수 있고, 공통적인 문제점을 캐치하기 쉬워진다. &lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;Github Workflow 파일 작성&lt;/h2&gt;
+&lt;p&gt;.github/workflows/{name}.yml로 workflow 설정 파일을 추가해줬다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yml&quot;&gt;&lt;pre class=&quot;language-yml&quot;&gt;&lt;code class=&quot;language-yml&quot;&gt;&lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; PR Test  
+  
+&lt;span class=&quot;token key atrule&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;  
+  &lt;span class=&quot;token key atrule&quot;&gt;pull_request&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;  
+    &lt;span class=&quot;token key atrule&quot;&gt;branches&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt; dev &lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;  
+  
+&lt;span class=&quot;token key atrule&quot;&gt;jobs&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;  
+  &lt;span class=&quot;token key atrule&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;  
+    &lt;span class=&quot;token key atrule&quot;&gt;runs-on&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; ubuntu&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;latest  
+    &lt;span class=&quot;token key atrule&quot;&gt;steps&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;  
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; Set up JDK 17  
+        &lt;span class=&quot;token key atrule&quot;&gt;uses&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; actions/setup&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;java@v1  
+        &lt;span class=&quot;token key atrule&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;  
+          &lt;span class=&quot;token key atrule&quot;&gt;java-version&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;17&lt;/span&gt;    
+  
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; Grant execute permission for gradlew  
+        &lt;span class=&quot;token key atrule&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; chmod +x gradlew  
+  
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; Test with Gradle  
+        &lt;span class=&quot;token key atrule&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; ./gradlew &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;info test  
+  
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; Publish Unit Test Results  
+        &lt;span class=&quot;token key atrule&quot;&gt;uses&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; EnricoMi/publish&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;unit&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;test&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;result&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;action@v1  
+        &lt;span class=&quot;token key atrule&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; $&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; always() &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;  
+        &lt;span class=&quot;token key atrule&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;  
+          &lt;span class=&quot;token key atrule&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; build/test&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;results/&lt;span class=&quot;token important&quot;&gt;**/*.xml&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;한 부분씩 살펴보도록 하자.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;Set up JDK 17&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Runner 서버에 JDK를 설치한다. &lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;Grant execute permission for gradlew&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;명령어를 통해 gradlew 스크립트에 대한 실행권한을 부여한다.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;Test with Gradle&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;실행 권한을 받아 테스트를 실행한다&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;Publish Unit Test Results&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;다른 사람이 만든 workflow설정도 쓸 수 있다. &lt;a href=&quot;https://github.com/EnricoMi/publish-unit-test-result-action&quot;&gt;링크&lt;/a&gt;
+테스트 결과를 읽기 쉬운 로그로 게시해준다. &lt;/p&gt;
+&lt;p&gt;하지만...
+&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/1f76a31c-2e77-4ce2-bf41-818fdf1fda07&quot; alt=&quot;Pasted image 20240219161225&quot;&gt;&lt;/p&gt;
+&lt;h2&gt;Fail to load ApplicationContext&lt;/h2&gt;
+&lt;p&gt;앞에서도 말했듯이 Github Actions는 별개의 Runner서버에서 실행되기 때문에 로컬에서만 적용되는 환경설정은 오류가 발생한다&lt;/p&gt;
+&lt;p&gt;나의 경우 설정 파일에 JWT 시크릿 키나 관리자 토큰 값이 있었기 때문에 기본적으로 .gitignore에 설정파일을 추가하고 팀원들도 마찬가지로 각자 로컬환경에서 설정파일을 작성했기 때문에 해당 값을 가져다 쓰는 빈을 생성하는데 문제가 발생했다.&lt;/p&gt;
+&lt;p&gt;가장 빠른 해결 방법은 물론 설정파일을 깃에 업로드하는 거지만, AWS 키와 같은 절대 공개되어서는 안
+되는 정보는 깃에 올릴 수 없다.&lt;/p&gt;
+&lt;p&gt;이에 대한 해결방법으로
+Github Secrets에 모든 설정을 등록하고 workflow에서 직접 설정파일을 작성하는 job을 추가하는 방법을 찾아봤지만 value를 암호화해야하고, 수정할때마다 secret을 삭제, 추가하는 일이 너무 번거로워 보였다.&lt;/p&gt;
+&lt;h2&gt;Git Submodule로 설정파일 관리하기&lt;/h2&gt;
+&lt;p&gt;Git Submodule를 이용하면 리포지토리 안에 다른 리포지토리를 분리해서 넣어서 사용할 수 있다고 한다.&lt;/p&gt;
+&lt;p&gt;별도의 private repository에 설정에 필요한 파일을 두고 메인 리포지토리에서 이를 연동해 사용한다면 팀원들과 설정을 공유하기도 쉽고 이를 workflow에서 사용할 수도 있다.&lt;/p&gt;
+&lt;p&gt;private repository에 설정파일을 업로드 한 후 메인 리포지토리의 깃에서
+&lt;code class=&quot;language-text&quot;&gt;git submodule add {private-repository-url} config&lt;/code&gt;
+를 입력해 서브모듈 리포지토리를 등록해준다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;[config]&lt;/p&gt;
+&lt;p&gt;스프링은 설정파일을 가장 먼저 &lt;code class=&quot;language-text&quot;&gt;src/main/resources&lt;/code&gt;에서 찾지만 해당 디렉토리에 설정파일이 없을 경우 &lt;code class=&quot;language-text&quot;&gt;config&lt;/code&gt;디렉토리를 찾아서 적용하기 때문이다. &lt;/p&gt;
+&lt;p&gt;나는 설정파일은 깃에 업로드하고 있지 않기 때문에 서브모듈에서 가져올 설정파일을 &lt;code class=&quot;language-text&quot;&gt;config&lt;/code&gt; 경로에 연동했다. &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;[서브모듈 최신화]&lt;/p&gt;
+&lt;p&gt;서브 모듈은 커밋 후 푸시를 해도 메인 리포지토리에서 자동으로 추적하여 업데이트 하지 않는다.&lt;/p&gt;
+&lt;p&gt;메인 리포지토리에서 서브모듈의 commit hash값만 참고하는 방식이기 때문에 서브모듈을 업데이트 했다면 &lt;code class=&quot;language-text&quot;&gt;git submodule update --remote&lt;/code&gt;로 최신화 해줘야 한다&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;.gitmodules 파일에 서브모듈 경로가 잘 적용된 것을 확인했다면 workflow에 해당 서브모듈을 연동함을 명시해 줘야 한다.
+secrets에 다른 리포지토리 접근을 허용하는 access token을 추가한 후&lt;/p&gt;
+&lt;p&gt;workflow 파일에 해당 작업을 추가해줬다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yml&quot;&gt;&lt;pre class=&quot;language-yml&quot;&gt;&lt;code class=&quot;language-yml&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; Checkout  
+  &lt;span class=&quot;token key atrule&quot;&gt;uses&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; actions/checkout@v2  
+  &lt;span class=&quot;token key atrule&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;  
+    &lt;span class=&quot;token key atrule&quot;&gt;token&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; $&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; secrets.ACTION_TOKEN &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;  
+    &lt;span class=&quot;token key atrule&quot;&gt;submodules&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean important&quot;&gt;true&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;마치며&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/701cd629-2d9a-4185-8157-803e3696b32c&quot; alt=&quot;Pasted image 20240301233610&quot;&gt;&lt;/p&gt;
+&lt;p&gt;이렇게 여러 시간의 시도를 통해 PR마다 테스트를 자동화해주었다.&lt;/p&gt;
+&lt;p&gt;테스트 실패시 PR에 실패한 라인에 코멘트를 달아주는 workflow, 빌드/테스트 실패시 slack에 알림을 보내는 workflow도 있으니 각자의 협업 방식에 맞는 workflow를 추가해주면 된다! &lt;/p&gt;
+&lt;p&gt;&lt;em&gt;틀린 부분이나 부족한 부분에 대한 피드백은 언제나 환영합니다&lt;/em&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Slice Test]]></title><description><![CDATA[인수테스트 에서 이어지는 글입니다. Slice Test Slice Test는 레이어별로 잘라서 레이어를 하나의 단위로 보는 테스트이다. 왜 Slice Test를 해야 하는가? 개별 레이어의 검증
 Slice Test…]]></description><link>https://jinkshower.github.io/sprint_test_strategy/</link><guid isPermaLink="false">https://jinkshower.github.io/sprint_test_strategy/</guid><pubDate>Sun, 25 Feb 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;&lt;a href=&quot;https://jinkshower.github.io/acceptance_test/&quot;&gt;인수테스트&lt;/a&gt; 에서 이어지는 글입니다.&lt;/p&gt;
 &lt;h2&gt;Slice Test&lt;/h2&gt;
 &lt;p&gt;Slice Test는 레이어별로 잘라서 레이어를 하나의 단위로 보는 테스트이다.&lt;/p&gt;
