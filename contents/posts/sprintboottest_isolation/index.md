@@ -2,7 +2,7 @@
 title: "@SpringBootTest와 테스트격리"
 description: "테스트 격리를 위한 여정"
 date: 2024-03-04
-update: 2024-03-04
+update: 2024-03-10
 tags:
   - spring
   - testing
@@ -10,7 +10,7 @@ tags:
 series: "testing"
 ---
 
-프로젝트 중 겪은 테스트 격리 문제에 대한 기록
+완성된 코드는 [링크](https://github.com/jinkshower/Todo-management)에서 볼 수 있습니다. (글의 코드와 조금 다른 면이 있을 수 있습니다)
 
 ## @SpringBootTest와 @Transactional
 
@@ -60,7 +60,7 @@ public class ControllerTest {
 
 일단 가장 먼저 @AfterEach에 테스트에서 사용하는 repository의 deleteAll() 메서드를 호출하는 방식을 적용해봤다. 
 
-하지만 deleteAll()은 특정 엔티티에 대한 레코드를 삭제하므로 연관관계가 맺어져 있는 엔티티에 대한 삭제가 제대로 이루어지지 않았다.(해당 부분은 아직 정확한 원인을 파악하지 못했다)
+하지만 deleteAll()은 특정 엔티티에 대한 레코드를 삭제하므로 연관관계가 맺어져 있는 엔티티에 대한 삭제가 제대로 이루어지지 않았다.
 
 따라서 테이블 데이터를 모두 삭제하는 truncate를 사용하게 되었다.
 
@@ -96,7 +96,74 @@ void clear() {
 이렇게 빠른 테스트 속도와 격리를 얻어냈지만 아쉬움이 남았다.
 매번 @AfterEach에 위의 코드를 작성해야 한다는 점, 테이블이 늘어나면 그만큼 쿼리문도 늘어나는 단점을 여전히 가지고 있다.
 
-이 후 AOP를 사용하여 위의 아쉬운 점을 해결하게 되었는데 해당 과정은 다른 글에서 이어서 다룰 예정이다.
+## 관심사 분리
+
+관심사를 분리하여 @AfterEach에 있는 데이터베이스 초기화 코드를 다른 클래스로 분리하면 매번 테이블을 확인할 필요도 없고, 다른 테스트 클래스에도 재사용할 수 있지 않을까?
+
+테스트마다 생성된 테이블의 이름을 얻어내 각각을 truncate쿼리를 자동으로 만든다면 가능할 것 같다.
+
+### 테이블 이름 얻기
+
+대부분의 관계형 데이터베이스는 생성된 테이블들의 메타정보를 가지고 있는 정보성 테이블이 존재한다. 
+
+h2는 information_schema라는 테이블에 메타정보를 저장하는데, 해당 테이블에 있는 모든 메타정보는 [공식문서](https://www.h2database.com/html/systemtables.html)를 참고하면 될 것같다.
+
+내가 관심있는건 테이블이름들이니
+```java
+SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'PUBLIC'
+```
+라는 쿼리를 작성하면 될 것같다. 
+
+### truncate 쿼리 작성
+
+이렇게 얻은 테이블 이름을 자료구조에 저장하고 각 테이블이름마다 반복하여
+```java
+TRUNCATE TABLE " + tableName + " RESTART IDENTITY
+```
+를 실행하면 직접 일일히 입력해주지 않아도 쿼리문이 실행될 것이다.
+
+작성한 코드
+```java
+public class TableCleaner {  
+  
+    private List<String> tableNames;  
+    private JdbcTemplate jdbcTemplate;  
+  
+    @Autowired  
+    public DatabaseCleaner(DataSource dataSource) {  
+        this.jdbcTemplate = new JdbcTemplate(dataSource);  
+    }  
+  
+    @Transactional  
+    public void tableClear() {  
+        String query = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'PUBLIC'";  
+        tableNames = jdbcTemplate.queryForList(query, String.class);  
+  
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");  
+        for (String tableName : tableNames) {  
+            jdbcTemplate.execute("TRUNCATE TABLE " + tableName + " RESTART IDENTITY ");  
+        }  
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");  
+    }  
+}
+```
+
+이렇게 작성한 클래스를 컴포넌트로 등록해줘서 테스트 실행시 컴포넌트 스캔에 잡히게 해주면 해당 클래스를 빈으로 사용할 수 있고, 
+
+```java
+@Component  
+public abstract class TestSupporter {  
+  
+    @Autowired  
+    private TableCleaner tableCleaner;  
+  
+    @AfterEach  
+    void clear() {  
+        tableCleaner.tableClear();  
+    }  
+}
+```
+해당 클래스로 주입받은 뒤 데이터베이스 초기화가 필요한 테스트에 상속받아 사용하면 테스트 생명주기에 맞춰 @AfterEach가 실행되며 자동으로 데이터베이스가 초기화되어, 테스트 격리가 될 것이다.
 
 *틀린 부분이나 부족한 부분에 대한 피드백은 언제나 환영합니다*
 
