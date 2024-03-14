@@ -234,7 +234,8 @@ N+1의 해결책은 여러가지 방법이 있는데 가장 일반적인 방법�
 public List<Todo> findAllByOrderByCreatedAtDescc() {  
     System.out.println("called");  
     return queryFactory  
-        .select(todo)  
+        .select(todo)
+        .distinct()  
         .from(todo)  
         .join(todo.user, user).fetchJoin()  
         .leftJoin(todo.comments, comment).fetchJoin()  
@@ -245,6 +246,7 @@ public List<Todo> findAllByOrderByCreatedAtDescc() {
 public List<Todo> searchByFilter(TodoSearchFilter todoSearchFilter) {  
     return queryFactory  
         .select(todo)  
+        .distinct()
         .from(todo)  
         .join(todo.user, user).fetchJoin()  
         .leftJoin(todo.comments, comment).fetchJoin()  
