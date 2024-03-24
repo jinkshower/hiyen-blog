@@ -1,4 +1,108 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of Hiyen]]></title><description><![CDATA[Always want to write sometimes]]></description><link>https://jinkshower.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 14 Mar 2024 09:14:27 GMT</lastBuildDate><item><title><![CDATA[Spring Data JPA의 페이징처리와 fetch join시의 문제점]]></title><description><![CDATA[…]]></description><link>https://jinkshower.github.io/pagination_fetchjoin/</link><guid isPermaLink="false">https://jinkshower.github.io/pagination_fetchjoin/</guid><pubDate>Thu, 14 Mar 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;&lt;em&gt;문제를 해결한 &lt;a href=&quot;https://github.com/jinkshower/Todo-management&quot;&gt;코드&lt;/a&gt;링크&lt;/em&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of Hiyen]]></title><description><![CDATA[Always want to write sometimes]]></description><link>https://jinkshower.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 24 Mar 2024 11:01:57 GMT</lastBuildDate><item><title><![CDATA[인덱스와 인덱스 적용기]]></title><description><![CDATA[MySQL InnoDB…]]></description><link>https://jinkshower.github.io/database_index/</link><guid isPermaLink="false">https://jinkshower.github.io/database_index/</guid><pubDate>Sun, 24 Mar 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;MySQL InnoDB스토리지 엔진으로 진행된 글입니다.&lt;/p&gt;
+&lt;h2&gt;인덱스란?&lt;/h2&gt;
+&lt;p&gt;인덱스는 데이터베이스에서 검색 속도를 향상시키기 위해 사용되는 데이터 구조다.&lt;/p&gt;
+&lt;p&gt;지정한 컬럼들을 기준으로 메모리 영역에서 일종의 목차를 생성하는 것과 비슷하다.&lt;/p&gt;
+&lt;p&gt;이렇게 생성된 목차를 통해 검색시 전체 테이블을 스캔하는 대신 목차를 사용하여 원하는 결과를 빠르게 찾을 수 있다.&lt;/p&gt;
+&lt;h3&gt;왜 인덱스를 사용해야할까?&lt;/h3&gt;
+&lt;p&gt;인덱스는 처음 생성하는데 시간이 많이 소요될수도 있고, 새로운 목차를 생성하는 것이기 때문에 추가 저장공간이 필요하다. &lt;/p&gt;
+&lt;p&gt;보통은 데이터베이스의 10% 정도의 추가 공간이 필요하다고 한다.
+또한 insert, update, delete와 같이 데이터 변경작업이 자주 일어날 경우 오히려 성능이 나빠질수도 있다.&lt;/p&gt;
+&lt;p&gt;하지만 일반적인 애플리케이션에서 select는 insert delete보다 훨씬 더 많이 발생한다. &lt;/p&gt;
+&lt;p&gt;즉 조회를 얼마나 빨리 할수 있느냐가 전체 애플리케이션 성능에 지배적인 영향을 끼칠수 밖에 없다. 따라서 위의 단점을 고려한 적절한 인덱스 설정이 쿼리 최적화의 첫걸음이라고 할 수 있다.&lt;/p&gt;
+&lt;h2&gt;이미 인덱스를 사용하고 있다?&lt;/h2&gt;
+&lt;p&gt;다음과 같은 테이블이 있다&lt;/p&gt;
+&lt;p&gt;(실험을 위해 데이터를 10만개 정도 넣은 상태이다)
+&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/6e1c1612-4e3b-44d2-bff4-14f275650441&quot; alt=&quot;Pasted image 20240324141013&quot;&gt;&lt;/p&gt;
+&lt;p&gt;생성된 테이블에 &lt;code class=&quot;language-text&quot;&gt;SHOW INDEX FROM {tableName}&lt;/code&gt;명령을 통해 테이블에 생성된 인덱스를 확인할 수 있다.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;show index from cards;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/b463b66d-a2ac-4f4a-9068-b9cc98ab979c&quot; alt=&quot;Pasted image 20240324141045&quot;&gt;&lt;/p&gt;
+&lt;p&gt;인덱스를 설정하는 추가적인 작업이 없었는데 왜 인덱스가 card테이블에 있는걸까?&lt;/p&gt;
+&lt;h2&gt;B-Tree&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/7c04c5a3-f31d-430e-809d-59ed1a642605&quot; alt=&quot;Pasted image 20240324172257&quot;&gt;
+(출처 :&lt;a href=&quot;https://builtin.com/data-science/b-tree-index&quot;&gt;https://builtin.com/data-science/b-tree-index&lt;/a&gt;)&lt;/p&gt;
+&lt;p&gt;데이터베이스는 일반적으로 많은 데이터를 저장하기 위해 B-Tree구조로 이루어져 있다.&lt;/p&gt;
+&lt;p&gt;B-Tree는 이진트리와 유사하지만 다른 점을 가지는데 자식 노드를 2개 이상 가질 수 있다는 점이다. 노드의 개수가 늘어나면서 자연스레 트리의 높이가 낮아지고 빠른 탐색 속도를 보장한다.&lt;/p&gt;
+&lt;p&gt;또한 B-Tree에서 말단 노드를 리프노드라 하는데 리프노드가 같은 레벨을 유지함으로써 편향된 트리가 선형탐색시간으로 치중되는 단점을 보완한다.&lt;/p&gt;
+&lt;h3&gt;인덱스와 B-Tree&lt;/h3&gt;
+&lt;p&gt;MySQL은 B-Tree의 노드에 해당하는 개념을 페이지로 구현한다.
+페이지는 키와 다음 페이지를 가리키는 주소로 이루어져 있고 키는 정렬되어 있다.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/4073d433-1802-464b-b900-681529a2911a&quot; alt=&quot;Pasted image 20240324173414&quot;&gt;&lt;/p&gt;
+&lt;p&gt;HHH라는 데이터를 찾을때 B-Tree구조로 이루어져 있다면 AAA-&gt;FFF-&gt;(페이지 이동) -&gt; FFF -&gt; HHH 5번의 검색으로 찾을 수 있기 때문에 선형탐색보다 훨씬 검색 성능이 우월하다.&lt;/p&gt;
+&lt;p&gt;하지만 insert작업시 리프 페이지가 꽉찼다면 새로운 페이지가 생성되어야 하고 이는 주소값을 가지는 중간 노드- 루트 노드의 페이지 증가로 연쇄되기 때문에 많은 비용이 발생하며 이를 &apos;페이지 분할 작업&apos;이라고 한다. &lt;/p&gt;
+&lt;h3&gt;클러스터형 인덱스과 논클러스터형 인덱스&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;클러스터형 인덱스 &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;테이블 전체가 정렬된 인덱스가 되는 방식의 인덱스 종류이다.
+테이블에 Primary Key를 지정하게 되면 클러스터링 인덱스를 형성하게 된다.
+정렬 되어 있지 않았던 테이블이 Primary Key를 기준으로 정렬된다.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/8835a7ae-9fbb-41dc-a7c2-792950c99e9b&quot; alt=&quot;Pasted image 20240324191104&quot;&gt;
+클러스터형 인덱스는 리프페이지가 실제 데이터 페이지이다. &lt;/p&gt;
+&lt;p&gt; Primary Key를 지정하지 않는다면 Unique + Not null 컬럼을 Primary Key처럼 사용하게 된다.&lt;/p&gt;
+&lt;p&gt;즉, Cards테이블을 만들 때 id를 Primary Key로 설정해줬기 때문에 자동으로 클러스터형 인덱스를 생성하게 된 것이다.&lt;/p&gt;
+&lt;p&gt;클러스터형 인덱스는 테이블 당 하나만 가질 수 있다.(물리적 정렬기준이 하나여야 하므로)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;논클러스터형 인덱스&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;물리적으로 테이블을 정렬하지 않고 대신 정렬된 별도의 인덱스 페이지를 생성한다.
+클러스터형 인덱스와 달리 테이블 하나에 여러개를 가질 수 있다. &lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/354ec545-68ea-4f66-9c62-587f57106ba3&quot; alt=&quot;Pasted image 20240324192858&quot;&gt;
+논클러스터형 인덱스의 리프 페이지는 실제 데이터의 주소 페이지 이다.
+실제 데이터 페이지의 주솟값 + 오프셋으로 구성되어 있다.&lt;/p&gt;
+&lt;p&gt;테이블 생성시 Unique 제약을 걸거나 &lt;code class=&quot;language-text&quot;&gt;create index&lt;/code&gt;등의 명령어로 논클러스터형 인덱스를 생성할 수 있다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;클러스터형 인덱스와 논클러스터형 인덱스의 조합&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;대개의 경우에는 한 테이블에 PK + Unique or 별도의 인덱스를 생성하므로 클러스터형 인덱스와 논클러스터형 인덱스가 혼합되어 있다.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/ec9e636b-4854-45c1-8f8c-0d0f9ebfa2b0&quot; alt=&quot;Pasted image 20240324193515&quot;&gt;&lt;/p&gt;
+&lt;p&gt;이 경우 조회시 &lt;code class=&quot;language-text&quot;&gt;논클러스터형 인덱스&lt;/code&gt; -&gt; &lt;code class=&quot;language-text&quot;&gt;클러스터형 인덱스&lt;/code&gt; 의 순서로 조회가 발생한다.
+이 때 논클러스터형 인덱스는 실제 데이터의 주소와 오프셋을 가지는 대신 클러스터형 인덱스가 적용된 컬럼의 값을 가지게 된다.&lt;/p&gt;
+&lt;p&gt;테이블에 데이터가 변경될 시 논클러스터형 인덱스가 테이블의 페이지번호와 오프셋을 가지고 있게 되면 논클러스터형 인덱스를 모두 수정해야 하기 때문이다. &lt;/p&gt;
+&lt;h2&gt;인덱스 적용하기&lt;/h2&gt;
+&lt;p&gt;다시 Card테이블로 돌아와서 인덱스를 적용해보자.
+card는 board&lt;em&gt;id를 가지고 보드에 있는 카드를 조회하는 경우가 많으므로
+where 절에 board&lt;/em&gt;id를 가지고 조회하는 쿼리가 많이 발생하게 된다.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;where board_id = ?&lt;/code&gt;의 쿼리를 실행했을 때 테이블 풀스캔으로 10만개의 데이터를 모두 찾는 실행계획을 볼 수 있다.
+&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/9bbab62e-4754-4f8f-b75f-8520b21ce670&quot; alt=&quot;Pasted image 20240321144818&quot;&gt;&lt;/p&gt;
+&lt;p&gt;간단한 테스트로 조회속도를 측정해보았다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token annotation punctuation&quot;&gt;@DisplayName&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;조회 속도 검사&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;  
+&lt;span class=&quot;token annotation punctuation&quot;&gt;@Test&lt;/span&gt;  
+&lt;span class=&quot;token keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;count_search_time&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;  
+    &lt;span class=&quot;token comment&quot;&gt;// 현재 시간 기록  &lt;/span&gt;
+    &lt;span class=&quot;token class-name&quot;&gt;LocalDateTime&lt;/span&gt; before &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;LocalDateTime&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+  
+    &lt;span class=&quot;token comment&quot;&gt;// 조회할 쿼리 실행  &lt;/span&gt;
+    &lt;span class=&quot;token class-name&quot;&gt;Query&lt;/span&gt; query &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; em&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;createQuery&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;select c from CardEntity c where c.boardId = 9999&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+    &lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;CardEntity&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; resultList &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; query&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getResultList&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+  
+    &lt;span class=&quot;token comment&quot;&gt;// 쿼리 실행 후 현재 시간 기록  &lt;/span&gt;
+    &lt;span class=&quot;token class-name&quot;&gt;LocalDateTime&lt;/span&gt; after &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;LocalDateTime&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+  
+    &lt;span class=&quot;token comment&quot;&gt;// 쿼리 실행 시간 계산  &lt;/span&gt;
+    &lt;span class=&quot;token class-name&quot;&gt;Duration&lt;/span&gt; duration &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Duration&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;between&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;before&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; after&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+    &lt;span class=&quot;token keyword&quot;&gt;long&lt;/span&gt; seconds &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; duration&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getSeconds&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+    &lt;span class=&quot;token keyword&quot;&gt;long&lt;/span&gt; milliseconds &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; duration&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;toMillis&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+  
+    &lt;span class=&quot;token comment&quot;&gt;// 결과 출력  &lt;/span&gt;
+    &lt;span class=&quot;token class-name&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;out&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;카드를 조회하는데 걸린 시간: &quot;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; seconds &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;초 &quot;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; milliseconds &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;밀리초&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/41b95df0-b02f-489b-a9d8-eed2810772fb&quot; alt=&quot;Pasted image 20240321143628&quot;&gt;&lt;/p&gt;
+&lt;p&gt;그럼 card테이블에 board&lt;em&gt;id를 인덱스로 적용해보자
+`CREATE INDEX idx&lt;/em&gt;board&lt;em&gt;id ON cards(board&lt;/em&gt;id)`로 인덱스를 등록할 수 있다. &lt;/p&gt;
+&lt;p&gt;(인덱스가 생성된 모습)
+&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/05093475-87ca-47d0-b12e-b45d349e4505&quot; alt=&quot;Pasted image 20240324165228&quot;&gt;&lt;/p&gt;
+&lt;p&gt;그럼 인덱스 적용 후의 실행계획을 살펴보자 &lt;/p&gt;
+&lt;p&gt;(인덱스 적용 후 실행계획)
+&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/8d564e70-fcc1-4f7e-a377-a0dbb7980c6e&quot; alt=&quot;Pasted image 20240321144741&quot;&gt;
+using idx&lt;em&gt;board&lt;/em&gt;id, 즉 인덱스를 타고 조회를 했음을 알 수 있다.
+실행 계획의 시간이 적용 전보다 훨씬 많이 줄었음을 확인할 수 있다.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/dccbc1b3-485a-4690-a89d-877b5784c3fc&quot; alt=&quot;Pasted image 20240321144941&quot;&gt;
+조회 테스트의 시간도 절반 가량으로 줄어들었음을 확인 할 수 있다.&lt;/p&gt;
+&lt;p&gt;이를 클러스터 인덱스와 논클러스터 인덱스로 보자면 논클러스터 인덱스인 &lt;code class=&quot;language-text&quot;&gt;idx_board_id&lt;/code&gt;를 통해 클러스터형 인덱스인 &lt;code class=&quot;language-text&quot;&gt;card_id&lt;/code&gt;의 pk값을 찾고 이에 해당하는 데이터의 주솟값으로 이동해 실제 데이터를 읽는 작업이라고 할 수 있겠다.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;참고&lt;/p&gt;
+&lt;p&gt;이것이 MySQL이다 - 우재남 저&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://builtin.com/data-science/b-tree-index&quot;&gt;https://builtin.com/data-science/b-tree-index&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Spring Data JPA의 페이징처리와 fetch join시의 문제점]]></title><description><![CDATA[…]]></description><link>https://jinkshower.github.io/pagination_fetchjoin/</link><guid isPermaLink="false">https://jinkshower.github.io/pagination_fetchjoin/</guid><pubDate>Thu, 14 Mar 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;&lt;em&gt;문제를 해결한 &lt;a href=&quot;https://github.com/jinkshower/Todo-management&quot;&gt;코드&lt;/a&gt;링크&lt;/em&gt;&lt;/p&gt;
 &lt;h2&gt;페이징 처리의 필요성&lt;/h2&gt;
 &lt;ol&gt;
 &lt;li&gt;&lt;strong&gt;성능&lt;/strong&gt;: 대량의 데이터를 한 번에 로드하면 메모리 부족이나 느린 쿼리 실행으로 인해 성능이 저하될 수 있다. 페이징 처리를 사용하면 사용자가 필요로 하는 작은 일부 데이터만 로드하여 성능을 향상시킬 수 있다.&lt;/li&gt;
