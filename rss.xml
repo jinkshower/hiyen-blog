@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of Hiyen]]></title><description><![CDATA[Always want to write sometimes]]></description><link>https://jinkshower.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 08 Apr 2024 05:17:30 GMT</lastBuildDate><item><title><![CDATA['이미 선택된 좌석입니다' 티켓 예매시의 동시성제어]]></title><description><![CDATA[…]]></description><link>https://jinkshower.github.io/ticket_reservation_concurrency/</link><guid isPermaLink="false">https://jinkshower.github.io/ticket_reservation_concurrency/</guid><pubDate>Mon, 08 Apr 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;학습 계기&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of Hiyen]]></title><description><![CDATA[Always want to write sometimes]]></description><link>https://jinkshower.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 11 Apr 2024 02:49:12 GMT</lastBuildDate><item><title><![CDATA['이미 선택된 좌석입니다' 티켓 예매시의 동시성제어]]></title><description><![CDATA[…]]></description><link>https://jinkshower.github.io/ticket_reservation_concurrency/</link><guid isPermaLink="false">https://jinkshower.github.io/ticket_reservation_concurrency/</guid><pubDate>Mon, 08 Apr 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;학습 계기&lt;/h2&gt;
 &lt;p&gt;콘서트 티켓 예매 프로젝트를 진행하는 중 동시에 많은 사용자가 한 자리의 좌석을 예매할 시 여러개의 같은 예약이 생성되는 문제를 발견했습니다.&lt;/p&gt;
 &lt;p&gt;콘서트 예매 상황을 생각해보면 굉장히 흔한 일인데요, &apos;이미 선택된 좌석입니다&apos;라는 메시지를 한번쯤은 보신 기억이 있을 거라 생각됩니다.&lt;/p&gt;
 &lt;p&gt;해당 문제를 해결하기 위해 jpa의 낙관적 락, 비관적락을 적용해보고 다른 방식으로 문제를 해결한 기록을 공유하고자 합니다.&lt;/p&gt;
@@ -178,6 +178,16 @@ where절의 version이 보이시나요? 해당 쿼리는 seat.reserve()를 할�
 &lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/db7fce63-f06e-4db9-a8b0-76622d488ad0&quot; alt=&quot;Pasted image 20240407193400&quot;&gt;&lt;/p&gt;
 &lt;p&gt;애플리케이션에서 redis로 미리 예외처리를 모두 해줬기 때문에 db에 insert쿼리가 단 하나만 날아가는 모습입니다.
 &lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/73a814d4-47eb-4e08-aca2-88224491cd33&quot; alt=&quot;Pasted image 20240407193443&quot;&gt;&lt;/p&gt;
+&lt;h2&gt;Redis 꼭 써야돼?&lt;/h2&gt;
+&lt;p&gt;사실 락이나 Redis를 쓰지 않고 중복된 예매 생성을 막는 방법이 있습니다.&lt;/p&gt;
+&lt;p&gt;바로 Reservation 테이블에 unique constraints를 걸어주는 방법인데요,
+concert&lt;em&gt;id + seat&lt;/em&gt;id 복합unique 설정을 해주면 중복된 예매가 생성되는 것을 막을 수 있습니다&lt;/p&gt;
+&lt;p&gt;하지만 해당 방법만을 채택하는 것은 문제가 있다 생각했습니다.&lt;/p&gt;
+&lt;p&gt;unique constraints만을 걸어둔다면 물론 같은 예매가 중복생성되지 않을 수 있지만 동시성문제 파트에서 말씀 드린 seat의 예약 상태를 다른 트랜잭션도 읽을 수 있다는 게 문제가 됩니다.&lt;/p&gt;
+&lt;p&gt;현재 로직에서는 결제와 같은 로직이 존재하지 않지만, 유저가 포인트를 사용해 예매를 할수 있다면요? &lt;/p&gt;
+&lt;p&gt;예매과정은 포인트 차감, 예매생성까지 한 트랜잭션에서 처리해야 하는데 예매가 중복 생성되는 것만을 막는다면 포인트는 차감되지만 예매는 생성되지 않는 문제가 생길 수 있습니다.&lt;/p&gt;
+&lt;p&gt;더불어 해당 예매가 unique 인지를 확인해야하는 insert쿼리가 요청수만큼 생성되는 것도 덤이지요.&lt;/p&gt;
+&lt;p&gt;따라서 저희는 Redis를 사용해 db에 최소한의 쿼리만을 날아가게 하며 두번째 요청부터는 seat의 예약상태를 못 읽게 하고, unique constraint를 걸어 최후의 보루로 예매 중복생성을 막기로 결정했습니다. &lt;/p&gt;
 &lt;h2&gt;마치며&lt;/h2&gt;
 &lt;p&gt;이렇게 예매 상황에서 동시성제어를 위해 낙관적락, 비관적락을 살펴보고 비즈니스 로직에 더 적절하고 db에 부하를 주지 않는 Redis를 활용한 기록을 적어보았습니다.&lt;/p&gt;
 &lt;p&gt;하지만 Redis도 단점은 분명히 존재합니다. 핵심 비즈니스 로직인 예매 기능이 Redis와 강하게 결부된다는 점, 그리하여 Redis의 서버가 죽는다면 예매 로직이 제대로 기능하지 못한다는 점등이 그러합니다.&lt;/p&gt;
