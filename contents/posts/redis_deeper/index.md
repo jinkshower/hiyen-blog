@@ -27,7 +27,7 @@ Redis는 인메모리 기반의 데이터 저장소로서, 빠른 속도와 간�
 ## Redis 자료구조
 
 Redis는 다양한 형태의 자료구조를 제공합니다.
-![[Pasted image 20240411174307.png]]
+![Pasted image 20240411174307](https://github.com/jinkshower/jinkshower.github.io/assets/135244018/52d38e0f-cb40-40cd-94f6-e8ca8b5d03ce)
 
 ### 1. String
 
@@ -164,6 +164,7 @@ private Boolean isTaken(Long concertId, String horizontal, String vertical) {
 지금은 "1A1"과 같은 형태로 key를 저장하는데요, 좌석 행열 정보는 콘서트마다 몇 천개 정도는 생길 수 있고 콘서트도 얼마든지 생길 수 있기 때문에 key가 너무 많아져 메모리에 문제가 생길 수 있습니다.
 
 따라서 현재 필요한 자료구조로는 Set, Hash, Sorted Set정도를 생각할 수 있겠습니다.
+
 concertId를 key값으로 두고 행열을 set의 value, hash의 field로 둔다면 콘서트 개수만큼만 key가 생기는 거니 메모리 효율성 측면에서 훨씬 낫다고 판단됩니다.
 
 ## Set을 선택한 이유 
@@ -212,7 +213,9 @@ public Long addSet(String key, String value) {
 
 Redis는 기본적으로 TTL(Time To Live)가 무한대로 설정되는데요, `expire` 명령을 통해 해당 값의 만료시간을 설정할 수 있습니다.
 
-현재 저희 프로젝트에서 콘서트가 시작되면 예매 정보를 따로 저장하는 테이블이 있기 때문에 예매를 막는 Redis의 자료들은 모두 쓸모가 없어지는데, 이를 이용해 저장된 값들의 TTL을 지정하면 메모리를 더 효율적으로 사용할 수 있다고 생각했습니다.
+현재 저희 프로젝트에서 콘서트가 시작되면 예매 정보를 따로 저장하는 테이블이 있기 때문에 예매를 막는 Redis의 자료들은 모두 쓸모가 없어집니다.
+
+이를 이용해 저장된 값들의 TTL을 현재시각과 콘서트 시작시각의 차이로 지정하면 메모리를 더 효율적으로 사용할 수 있다고 생각했습니다.
 
 하지만 문제가 있었습니다. Redis에 `sadd` 명령과 `expire` 이 하나의 메서드로 작용하면  value가 추가될 때마다 key의 만료시간이 갱신되버립니다. 따라서 콘서트 시작 직전의 예매 하나 때문에 만료시간이 다시 갱신될 수도 있습니다.
 
@@ -277,8 +280,8 @@ public String addSet(String key, String value, Long expiredTime) {
 스크립트가 추가된 `addSet`메서드 입니다.
 
 이제 해당 메서드로 동시성 테스트를 실행하면
-![[Pasted image 20240410164944.png]]
-![[Pasted image 20240410165002.png]]
+![Pasted image 20240410164944](https://github.com/jinkshower/jinkshower.github.io/assets/135244018/94b48661-7883-4dc0-a323-4b80f612d156)
+![Pasted image 20240410165002](https://github.com/jinkshower/jinkshower.github.io/assets/135244018/76e1b413-2477-4589-9f15-a283bbe549ea)
 테스트는 통과하고
 
 ```
