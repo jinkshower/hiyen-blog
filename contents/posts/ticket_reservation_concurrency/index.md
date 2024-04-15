@@ -1,6 +1,6 @@
 ---
-title: "'이미 선택된 좌석입니다' 티켓 예매시의 동시성제어"
-description: "티켓 예매시의 동시성 제어와 문제 해결 기록"
+title: "'이미 선택된 좌석입니다' 티켓 예매시 중복예매생성 문제"
+description: "중복예매생성 문제를 해결한 기록"
 date: 2024-04-08
 update: 2024-04-08
 tags:
@@ -156,7 +156,7 @@ public class TransactionalProxy {
 }
 ```
 
-즉 트랜잭션 시작과 커밋을 담당하는 프록시 메서드가 한 스레드만 접근하는 것을 보장하지 못하기 때문에 동시성 문제를 synchronized로는 해결 할 수 없습니다.
+즉 트랜잭션 시작과 커밋을 담당하는 프록시 메서드에 한 스레드만 접근하는 것을 보장하지 못하기 때문에 동시성 문제를 synchronized로는 해결 할 수 없습니다.
 
 ## 락
 
@@ -220,13 +220,34 @@ Seat findSeatForReservation(Long concertId, String horizontal, String vertical);
 
 성능 면에서는 비관적락이 낙관적 락보다 조금 더 낫지만 그렇게 큰 차이가 아니라고 판단했습니다.
 
-하지만 낙관적 락, 비관적 락은 동시성 제어라는 목표를 달성했지만 프로젝트에 적용하기에는 무리가 있다고 판단했습니다. 
+## 락을 꼭 써야할까?
 
-현재 프로젝트의 비즈니스 로직에서 첫번째로 좌석을 예매하는 요청이 오면 다른 요청은 모두 예외로 처리하면 됩니다. 
+사실 락을 쓰지 않고 중복된 예매 생성을 막는 방법이 있습니다.
 
-하지만 낙관적락은 update, 비관적 락은 select for update쿼리가 스레드 요청만큼 발생하게 됩니다. db에 요청 수만큼  쿼리가 날아가면 부하가 심해질 것입니다.
+바로 Reservation 테이블에 unique constraints를 걸어주는 방법인데요, 
+concert_id + seat_id를 복합unique키 설정을 해주면 중복된 예매가 생성되는 것을 막을 수 있습니다
 
-또한 두 방식 모두 분산DB환경에서는 적용이 되지 않는 단점이 있습니다.
+jpa에서 두개 이상의 컬럼에 unique 설정을 해주려면 다음과 같이 @Table 어노테이션을 수정해주면 됩니다.
+```java
+@Table(name = "reservations", uniqueConstraints = {  
+    @UniqueConstraint(  
+        columnNames = {"concertId", "seatId"}  
+    )  
+})
+```
+테스트를 돌려보면!
+![Pasted image 20240415105417](https://github.com/jinkshower/jinkshower.github.io/assets/135244018/a715aea6-1b3c-447d-a897-184f622f8c0b)
+
+unique key violation이 중복된 예매에서 발생하는 것을 확인할 수 있습니다.
+
+![Pasted image 20240415105618](https://github.com/jinkshower/jinkshower.github.io/assets/135244018/e8742978-98c4-4bc4-992d-20558c8f1442)
+테스트는 통과입니다.
+
+낙관적 락, 비관적 락 혹은 unique constraint 모두 예매 중복 생성 방지라는 목표를 달성했지만 프로젝트에 적용하기에는 무리가 있다고 판단했습니다. 
+
+낙관적락은 update, 비관적 락은 select for update쿼리, unique constraint 모두 스레드 요청만큼 발생하게 됩니다. db에 요청 수만큼  쿼리가 날아가면 부하가 심해질 것입니다.
+
+현재 프로젝트의 비즈니스 로직에서 첫번째로 좌석을 예매하는 요청이 오면 다른 요청은 모두 예외로 처리하면 됩니다. 첫 번째 요청 이외에는 락을 획득하거나 db 조회를 할 이유가 없습니다.
 
 ## db에 부하를 주지 않는 방법은 없을까?
 
@@ -285,28 +306,10 @@ Spring환경에서 redis를 코드로 활용하기 위하여 RedisTemplate를 @B
 애플리케이션에서 redis로 미리 예외처리를 모두 해줬기 때문에 db에 insert쿼리가 단 하나만 날아가는 모습입니다.
 ![Pasted image 20240407193443](https://github.com/jinkshower/jinkshower.github.io/assets/135244018/73a814d4-47eb-4e08-aca2-88224491cd33)
 
-## Redis 꼭 써야돼?
-
-사실 락이나 Redis를 쓰지 않고 중복된 예매 생성을 막는 방법이 있습니다.
-
-바로 Reservation 테이블에 unique constraints를 걸어주는 방법인데요, 
-concert_id + seat_id 복합unique 설정을 해주면 중복된 예매가 생성되는 것을 막을 수 있습니다
-
-하지만 해당 방법만을 채택하는 것은 문제가 있다 생각했습니다.
-
-unique constraints만을 걸어둔다면 물론 같은 예매가 중복생성되지 않을 수 있지만 동시성문제 파트에서 말씀 드린 seat의 예약 상태를 다른 트랜잭션도 읽을 수 있다는 게 문제가 됩니다.
-
-현재 로직에서는 결제와 같은 로직이 존재하지 않지만, 유저가 포인트를 사용해 예매를 할수 있다면요? 
-
-예매과정은 포인트 차감, 예매생성까지 한 트랜잭션에서 처리해야 하는데 예매가 중복 생성되는 것만을 막는다면 포인트는 차감되지만 예매는 생성되지 않는 문제가 생길 수 있습니다.
-
-더불어 해당 예매가 unique 인지를 확인해야하는 insert쿼리가 요청수만큼 생성되는 것도 덤이지요.
-
-따라서 저희는 Redis를 사용해 db에 최소한의 쿼리만을 날아가게 하며 두번째 요청부터는 seat의 예약상태를 못 읽게 하고, unique constraint를 걸어 최후의 보루로 예매 중복생성을 막기로 결정했습니다. 
 
 ## 마치며
 
-이렇게 예매 상황에서 동시성제어를 위해 낙관적락, 비관적락을 살펴보고 비즈니스 로직에 더 적절하고 db에 부하를 주지 않는 Redis를 활용한 기록을 적어보았습니다.
+이렇게 예매 상황에서 중복 예매 생성 방지를 위해 낙관적락, 비관적락, 락을 쓰지 않는 방법을 살펴보고 비즈니스 로직에 더 적절하고 db에 부하를 주지 않는 Redis를 활용한 기록을 적어보았습니다.
 
 하지만 Redis도 단점은 분명히 존재합니다. 핵심 비즈니스 로직인 예매 기능이 Redis와 강하게 결부된다는 점, 그리하여 Redis의 서버가 죽는다면 예매 로직이 제대로 기능하지 못한다는 점등이 그러합니다.
 
