@@ -1,4 +1,481 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of Hiyen]]></title><description><![CDATA[Always want to write sometimes]]></description><link>https://jinkshower.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 23 Apr 2024 13:49:46 GMT</lastBuildDate><item><title><![CDATA[Actuator, Prometheus, Grafana로 서버 장애 대응하기]]></title><description><![CDATA[모니터링]]></description><link>https://jinkshower.github.io/monitoring/</link><guid isPermaLink="false">https://jinkshower.github.io/monitoring/</guid><pubDate>Wed, 24 Apr 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;모니터링&lt;/p&gt;</content:encoded></item><item><title><![CDATA[기술변경에 확장성을 가진 리팩토링]]></title><description><![CDATA[리팩토링]]></description><link>https://jinkshower.github.io/technology_free_code/</link><guid isPermaLink="false">https://jinkshower.github.io/technology_free_code/</guid><pubDate>Mon, 22 Apr 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;리팩토링&lt;/p&gt;</content:encoded></item><item><title><![CDATA[알아보고 적용하는 DB Replication]]></title><description><![CDATA[db 리플리케이션]]></description><link>https://jinkshower.github.io/db_replication/</link><guid isPermaLink="false">https://jinkshower.github.io/db_replication/</guid><pubDate>Fri, 19 Apr 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;db 리플리케이션&lt;/p&gt;</content:encoded></item><item><title><![CDATA[조회 API 성능 개선]]></title><description><![CDATA[더 빠르게 할 순 없을까?]]></description><link>https://jinkshower.github.io/api_performance_improvment/</link><guid isPermaLink="false">https://jinkshower.github.io/api_performance_improvment/</guid><pubDate>Mon, 15 Apr 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;더 빠르게 할 순 없을까?&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Redis, 좀 더 자세히 알아볼까?]]></title><description><![CDATA[학습 계기 저번글에서 프로젝트의 예매 로직에서의 동시성 제어를 Redis로 해결하기로 결정했습니다. redis가 프로젝트의 핵심기능에서 중요한 역할을 하는 만큼 좀 더 자세히 학습할 필요가 있다고 생각했습니다. 또한 프로젝트에서 Redis…]]></description><link>https://jinkshower.github.io/redis_deeper/</link><guid isPermaLink="false">https://jinkshower.github.io/redis_deeper/</guid><pubDate>Fri, 12 Apr 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;학습 계기&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of Hiyen]]></title><description><![CDATA[Always want to write sometimes]]></description><link>https://jinkshower.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 25 Apr 2024 06:38:05 GMT</lastBuildDate><item><title><![CDATA[Actuator, Prometheus, Grafana로 서버 장애 대응하기]]></title><description><![CDATA[학습계기 모니터링 시스템을 구축하게 되었습니다. 이 중 Spring Boot 프로젝트와 쉽게 연동할 수 있고, 레퍼런스가 많고 무엇보다 인 Actuator-Prometheus-Grafana를 선택하게 되었습니다. 모니터링 과정 Pasted image…]]></description><link>https://jinkshower.github.io/monitoring/</link><guid isPermaLink="false">https://jinkshower.github.io/monitoring/</guid><pubDate>Wed, 24 Apr 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;학습계기&lt;/h2&gt;
+&lt;p&gt;모니터링 시스템을 구축하게 되었습니다.&lt;/p&gt;
+&lt;p&gt;이 중 Spring Boot 프로젝트와 쉽게 연동할 수 있고, 레퍼런스가 많고 무엇보다 &lt;code class=&quot;language-text&quot;&gt;무료&lt;/code&gt;인 Actuator-Prometheus-Grafana를 선택하게 되었습니다.&lt;/p&gt;
+&lt;h2&gt;모니터링 과정&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/1b2879f0-b7ec-4865-8121-07dffea1cf3c&quot; alt=&quot;Pasted image 20240425111334&quot;&gt;
+(출처: &lt;a href=&quot;https://wildeveloperetrain.tistory.com/309&quot;&gt;https://wildeveloperetrain.tistory.com/309&lt;/a&gt;)&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;SpringBoot의 Actuator가 실행중인 애플리케이션의 다양한 내부 정보들을 Micrometer라는 라이브러리를 통해 Prometheus가 쓸 수 있는 메트릭으로 수집하고 &lt;/li&gt;
+&lt;li&gt;Prometheus가 이를 주기적으로 pull하여 쿼리할 수 있는 시계열 데이터(시간에 따라 저장된 데이터)로 가공하고 &lt;/li&gt;
+&lt;li&gt;Grafana는 사용자가 쉽게 볼 수 있게 시각화하는 역할을 합니다.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;localhost:8080을 기준으로 진행되는 기록입니다.&lt;/code&gt;&lt;/p&gt;
+&lt;h2&gt;Actuator&lt;/h2&gt;
+&lt;p&gt;Actuator는 Spring Boot의 서브 프로젝트로 간단하게 빌드에 의존성을 추가하는 것만으로도 활성화 할 수 있습니다.&lt;/p&gt;
+&lt;p&gt;앞서 말씀드린 Micrometer라이브러리도 메트릭 수집에 필요하니 의존성을 추가해주어야 합니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;implementation &apos;org&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;springframework&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;boot&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt;spring&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;boot&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;starter&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;actuator&apos;  
+runtimeOnly &apos;io&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;micrometer&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt;micrometer&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;registry&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;prometheus&apos;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;해당 의존성을 추가하고 빌드를 하고 &lt;code class=&quot;language-text&quot;&gt;localhost:8080/actuator&lt;/code&gt;로 접속하면 Actuator가 제공하는 기본 엔드포인트를 확인할 수 있습니다.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/3751e1ee-f591-4db9-b977-9881447becad&quot; alt=&quot;Pasted image 20240425113607&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;actuator/health&lt;/code&gt;로 접속해보면&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/925eb0be-788b-42f7-b6b8-e49f00ff9293&quot; alt=&quot;Pasted image 20240425114118&quot;&gt;&lt;/p&gt;
+&lt;p&gt;으로 현재 애플리케이션이 동작 중이라는 정보를 확인할 수 있습니다. &lt;/p&gt;
+&lt;h3&gt;주의점&lt;/h3&gt;
+&lt;p&gt;운영 서버에서 Actuator를 사용할 시 불필요한 엔드포인트를 활성화하면 중요 환경변수, 메모리 정보가 노출될 수 있고 Shutdown Endpoint는 애플리케이션을 중지시킬 수 있기 때문에 기본적으로 모든 엔드포인트를 disabled로 두고 필요한 엔드포인트만 화이트리스트로 운영하는 것이 추천됩니다.&lt;/p&gt;
+&lt;p&gt;따라서 모든 엔드포인트를 disabled하고 prometheus에 대한 엔드포인트만 열도록 설정해주었습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;management&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;endpoints&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;enabled&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;by&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;default&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;false&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;//모든 엔드포인트 disabled&lt;/span&gt;
+management&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;endpoint&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;prometheus&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;enabled&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;//prometheus enable&lt;/span&gt;
+management&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;endpoints&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;web&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;exposure&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;include &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; prometheus &lt;span class=&quot;token comment&quot;&gt;//노출할 endpoint 명시&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;스프링 시큐리티를 사용하신다면 &lt;code class=&quot;language-text&quot;&gt;/actuator/prometheus&lt;/code&gt;라는 엔드포인트가 노출되었으니 관리자 권한으로 해당 엔드포인트에 인가 처리를 하시면 좀 더 보안성이 올라갈 것이라고 생각됩니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;antMatchers&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;/actuator/**&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;hasRole&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;ADMIN&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;이제 &lt;code class=&quot;language-text&quot;&gt;/actuator/prometheus&lt;/code&gt;로 접속을 하면&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/8420b5ba-bab2-4a1e-9b74-7da5a9c704a1&quot; alt=&quot;Pasted image 20240425120718&quot;&gt;
+이렇게 애플리케이션의 내부정보들이 메트릭으로 수집된 것을 확인할 수 있습니다.&lt;/p&gt;
+&lt;h2&gt;Prometheus&lt;/h2&gt;
+&lt;p&gt;이제 Prometheus가 위의 엔드포인트에 접속하여 메트릭을 pull할 수 있게 하면 됩니다.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;docker로 진행됩니다&lt;/code&gt;&lt;/p&gt;
+&lt;h3&gt;docker로 Prometheus 설치&lt;/h3&gt;
+&lt;p&gt;Prometheus를 docker로 설치할 때 Prometheus가 어느 엔드포인트에서 어느 주기로 메트릭을 수집(scrape)할지 미리 설정해주어야 합니다.&lt;/p&gt;
+&lt;p&gt;docker로 Prometheus를 설치할 디렉토리를 만들고 해당 폴더에 &lt;code class=&quot;language-text&quot;&gt;prometheus.yml&lt;/code&gt;파일을 작성합니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yaml&quot;&gt;&lt;pre class=&quot;language-yaml&quot;&gt;&lt;code class=&quot;language-yaml&quot;&gt;&lt;span class=&quot;token key atrule&quot;&gt;global&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;scrape_interval&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;     15s //15초 간격으로 수집
+
+&lt;span class=&quot;token key atrule&quot;&gt;scrape_configs&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;job_name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;prometheus&apos;&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;metrics_path&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &apos;/actuator/prometheus&apos; //메트릭 수집 경로
+    &lt;span class=&quot;token key atrule&quot;&gt;static_configs&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;targets&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;&amp;lt;host&gt;:&amp;lt;port&gt;&apos;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt; //메트릭 수집 호스트 정보&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;15초 간격으로 수집하고 &lt;code class=&quot;language-text&quot;&gt;/actuator/prometheus&lt;/code&gt;로 메트릭 수집경로를 명시하고 &lt;code class=&quot;language-text&quot;&gt;targets&lt;/code&gt;에 호스트와 포트 정보를 명시해줍니다.&lt;/p&gt;
+&lt;p&gt;이제 해당 폴더에서 docker 컨테이너로 Prometheus를 띄우면 됩니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token function&quot;&gt;docker&lt;/span&gt; run &lt;span class=&quot;token parameter variable&quot;&gt;--name&lt;/span&gt; prometheus &lt;span class=&quot;token parameter variable&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-p&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;9090&lt;/span&gt;:9090 &lt;span class=&quot;token parameter variable&quot;&gt;-v&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;prometheus.yml이 있는 경로&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;:/etc/prometheus/prometheus.yml prom/prometheus&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;저는 해당 폴더에서 실행했기 때문에 경로 부분을 &lt;code class=&quot;language-text&quot;&gt;$(pwd)&lt;/code&gt;로 했지만 환경에 맞춰서 사용하시면 됩니다.&lt;/p&gt;
+&lt;p&gt;이제 9090포트로 접속하면!&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/4f2603b2-57fb-42dd-8683-564a95abdcdc&quot; alt=&quot;Pasted image 20240425125109&quot;&gt;
+Prometheus가 실행되는 것을 확인할 수 있습니다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Status-&gt; Targets에서 endpoint와의 연결이 &lt;code class=&quot;language-text&quot;&gt;up&lt;/code&gt;인 것을 확인 해주셔야 합니다.&lt;/li&gt;
+&lt;li&gt;트러블 슈팅
+-&gt; prometheus.yml 파일의 호스트를 localhost로 명시하면 Prometheus가 연결에 실패하여 &lt;code class=&quot;language-text&quot;&gt;host.docker.internal&lt;/code&gt;로 바꾸어 주었습니다. &lt;a href=&quot;https://www.inflearn.com/questions/1030769/docker%EB%A1%9C-prometheus-grafana-%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94-%EA%B2%BD%EC%9A%B0-%EC%84%A4%EC%A0%95-%EA%B0%80%EC%9D%B4%EB%93%9C&quot;&gt;참고&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Grafana&lt;/h2&gt;
+&lt;p&gt;이제 Prometheus가 수집하고 가공한 데이터를 Grafana에서 시각화할 차례입니다.&lt;/p&gt;
+&lt;p&gt;Grafana를 일단 docker에서 컨테이너로 실행해야겠죠?&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token function&quot;&gt;docker&lt;/span&gt; run &lt;span class=&quot;token parameter variable&quot;&gt;--name&lt;/span&gt; grafana &lt;span class=&quot;token parameter variable&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-p&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;80&lt;/span&gt;:3000 grafana/grafana&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Grafana 이미지를 80포트의 docker 컨테이너로 띄우는 명령입니다.&lt;/p&gt;
+&lt;p&gt;Grafana&lt;/p&gt;
+&lt;p&gt;80포트로 접속하면 Grafana의 로그인 화면이 보이는데요,
+기본 id는 admin, password도 admin으로 되어 있습니다.(password는 환경에 맞게 변경할 수 있습니다.)&lt;/p&gt;
+&lt;p&gt;이제 Grafana에 접속하여 Prometheus 연결 설정을 해주어야 합니다.&lt;/p&gt;
+&lt;p&gt;왼쪽 패널의 Connections에서 Data source를 클릭하고
+&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/3f41091e-e8a1-423f-a3d9-450afa3af239&quot; alt=&quot;Pasted image 20240425142203&quot;&gt;&lt;/p&gt;
+&lt;p&gt;Add new Datasource를 클릭하고 type으로 Prometheus를 선택합니다.
+&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/e1d45327-e877-4c08-b7c3-d1e613b39b4e&quot; alt=&quot;Pasted image 20240425151724&quot;&gt;&lt;/p&gt;
+&lt;p&gt;Connection 부분에 Promethus의 접속 url을 입력합니다.
+&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/2a1bb74d-7452-4dc1-b410-f5afc51234fd&quot; alt=&quot;Pasted image 20240425151746&quot;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;여기서도 docker로 사용할 시 &lt;code class=&quot;language-text&quot;&gt;host.docker.internal&lt;/code&gt;로 호스트를 명시해줘야 합니다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Save &amp;#x26; Test를 클릭하여 접속이 되는지 확인합니다.
+&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/f36e8047-bf7b-4f6f-9012-e292de7f1d5d&quot; alt=&quot;Pasted image 20240425151803&quot;&gt;&lt;/p&gt;
+&lt;p&gt;이제 연결한 데이터를 시각화할 DashBoard를 생성하면 됩니다.&lt;/p&gt;
+&lt;p&gt;왼쪽 패널의 Dashboards를 선택하고 New를 클릭합니다
+&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/22f89528-723c-4e08-b617-15c5c62ec711&quot; alt=&quot;Pasted image 20240425151841&quot;&gt;&lt;/p&gt;
+&lt;p&gt;이미 만들어진 Dashboard를 편리하게 사용하기 위해 Import Dashboard를 클릭하고
+&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/b9caa617-3c3c-496f-b611-57e082eb4430&quot; alt=&quot;Pasted image 20240425151925&quot;&gt;&lt;/p&gt;
+&lt;p&gt;가장 다운로드 수가 많은 JVM Dashboard를 사용하기 위해 4701을 Load합니다
+-&gt; 잘 만들어진 다른 Dashboard를 사용하고 싶다면 바로 위의 링크로 들어가셔서 Dashboard를 선택할 수 있습니다.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/76ba4f80-f3d6-460b-aea1-e8249e48e676&quot; alt=&quot;Pasted image 20240425152009&quot;&gt;&lt;/p&gt;
+&lt;p&gt;그리고 Dashboard에 연결할 Datasource를 설정하고, Import를 누르면!
+&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/5b71a463-3690-41e9-94f5-b899365f034d&quot; alt=&quot;Pasted image 20240425152043&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/73edf3db-1da5-469e-b16f-d5d9974264f5&quot; alt=&quot;Pasted image 20240425143900&quot;&gt;&lt;/p&gt;
+&lt;p&gt;이렇게 Prometheus가 가공한 데이터를 시각화하여 볼 수 있습니다.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;참고&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://techblog.woowahan.com/9232/&quot;&gt;https://techblog.woowahan.com/9232/&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[기술변경에 확장성을 가진 리팩토링]]></title><description><![CDATA[학습 계기 팀원분이 ci과정에서 계속 빌드가 실패한다고 해당 오류에 대한 이슈를 제기해주셨습니다. 로그를 살펴보았는데요, 테스트에서 Redis가 없어서 일어난 오류임을 인지하고 CI 과정에서 Redis설치하는 flow…]]></description><link>https://jinkshower.github.io/technology_free_code/</link><guid isPermaLink="false">https://jinkshower.github.io/technology_free_code/</guid><pubDate>Mon, 22 Apr 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;학습 계기&lt;/h2&gt;
+&lt;p&gt;팀원분이 ci과정에서 계속 빌드가 실패한다고 해당 오류에 대한 이슈를 제기해주셨습니다.&lt;/p&gt;
+&lt;p&gt;로그를 살펴보았는데요, 테스트에서 Redis가 없어서 일어난 오류임을 인지하고 CI 과정에서 Redis설치하는 flow를 추가해서 문제를 해결했습니다.&lt;/p&gt;
+&lt;p&gt;간단한 오류였고 간단한 해결이었지만 찝찝했는데요, Redis가 아닌 다른 기술을 사용하게 된다면? 그 땐 Redis를 설치하는 ci과정을 삭제하고 다른 기술 환경을 마련해야 할까요? 거기서 에러가 발생하면 다시 디버깅을 하고요? &lt;/p&gt;
+&lt;p&gt;해당 오류를 해결하면서 좀 더 근본적인 문제는 기술에 의존적인 코드을 작성하고 있었기 때문임을 인지했습니다.&lt;/p&gt;
+&lt;p&gt;따라서 리팩토링을 통해 기술 의존적인 코드를 개선한 기록을 공유하고자 합니다.&lt;/p&gt;
+&lt;h2&gt;구현체에 의존하는 코드&lt;/h2&gt;
+&lt;p&gt;(코드가 갑자기 나와 이해가 어려우신 분은 &lt;a href=&quot;https://jinkshower.github.io/ticket_reservation_concurrency/&quot;&gt;이전 글&lt;/a&gt; 을 참고하시면 더 이해가 쉬울 것 같습니다!)&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;ReservationService&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+
+	&lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;RedisTemplate&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; redisTemplate&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+	&lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Boolean&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;isTaken&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Long&lt;/span&gt; concertId&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; horizontal&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; vertical&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;  
+    &lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; key &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; concertId &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; horizontal &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; vertical&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+    &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Boolean&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token constant&quot;&gt;FALSE&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;equals&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;  
+        redisTemplate&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;opsForValue&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;setIfAbsent&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;key&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;reserved&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+	&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;예매에서 Redis를 이용하여 중복된 요청을 막는 메서드입니다.
+Redis를 spring에서 이용하기 위해 빈으로 등록된 RedisTemplate를 주입받아서 사용하고 있습니다.&lt;/p&gt;
+&lt;p&gt;해당 코드의 문제점은 무엇일까요?
+비즈니스 로직이 RedisTemplate라는 구체적인 구현체와 강하게 결합하고 있다는 점입니다. &lt;/p&gt;
+&lt;p&gt;중복 예매 생성을 막는 기술이 Redis가 아니라 MongoDB가 된다면 이에 따라 도메인 내 코드를 수정해야 합니다. 만약 RedisTemplate를 쓰는 곳이 1000곳이라면 1000곳의 코드를 모두 수정해야 하겠죠.&lt;/p&gt;
+&lt;p&gt;즉, 객체지향 5대 원칙 중 &lt;/p&gt;
+&lt;p&gt;OCP(Open-Closed Principle) 확장에는 열려있고 수정에는 닫혀 있는 코드
+(Redis -&gt; MongoDb의 경우 수정이 엄청 일어나야 함)&lt;/p&gt;
+&lt;p&gt;DIP(Dependency Inversion Principle) 고수준 모듈은 저수준 모듈의 구현에 의존해서는 안된다
+(고수준의 Service모듈이 구체적인 RedisTemplate에 의존하고 있음)&lt;/p&gt;
+&lt;p&gt;는 원칙을 위배하고 있는 코드입니다.&lt;/p&gt;
+&lt;h2&gt;기술 의존적인 메서드를 추상화하기&lt;/h2&gt;
+&lt;p&gt;로직을 수행하는 메서드를 다시 살펴보고 추상화 할 수 있는 부분을 짚어보았습니다.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;예매 생성 시 중복된 key, value이면 다른 리턴값을 보내야 한다 &lt;/li&gt;
+&lt;li&gt;예매 취소 시 key-value는 삭제 되어야 한다.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;이를 interface로 적용해보았습니다. &lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DuplicatedReservationCheck&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;  
+  
+    &lt;span class=&quot;token class-name&quot;&gt;Boolean&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;isDuplicated&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; key&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; value&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+  
+    &lt;span class=&quot;token keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;delete&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; key&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; value&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;해당 인터페이스의 구현체에서 구체적인 로직을 작성하면 됩니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DuplicatedReservationCheckImpl&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;implements&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DuplicatedReservationCheck&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;  
+  
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;RedisTemplate&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Object&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; redisTemplate&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+  
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Override&lt;/span&gt;  
+    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Boolean&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;isDuplicated&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; key&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; value&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;  
+	    &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Boolean&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token constant&quot;&gt;FALSE&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;equals&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;  
+	        redisTemplate&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;opsForValue&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;setIfAbsent&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;key&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;reserved&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; 
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;  
+  
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Override&lt;/span&gt;  
+    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;delete&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; key&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; value&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;  
+        redisTemplate&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;opsForSet&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;remove&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;key&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; value&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;  
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;이제 서비스는 RedisTemplate라는 구체적인 구현체를 모르게 됩니다. &lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;ReservationService&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+
+	&lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DuplicatedReservationCheck&lt;/span&gt; duplicatedReservationCheck&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+	
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Override&lt;/span&gt;  
+    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Boolean&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;isDuplicated&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; key&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; value&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;  
+	    &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; duplicatedReservationCheck&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;isDuplicated&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;key&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; value&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; 
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;  
+  
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Override&lt;/span&gt;  
+    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;deleteValue&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; key&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; value&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;  
+        duplicatedReservationCheck&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;delete&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;key&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; value&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;이 리팩토링이 가지는 장점은 무엇일까요?&lt;/p&gt;
+&lt;p&gt;이제 Service는 중복체크가 어떻게 실행되는지 구체적으로 알 필요가 없어집니다.
+즉, 다른 구현체가 와도 리턴 값만 확인해주면 되기 때문에 Redis가 MongoDb가 되든, Memcached가 되든 Service의 코드에 변경점이 생기지 않습니다. &lt;/p&gt;
+&lt;h2&gt;테스트에 적용하기&lt;/h2&gt;
+&lt;p&gt;중복 예매 체크가 interface를 구현한 구현체라면 어떤 것이든 가능해졌기 때문에 테스트에서도 Redis를 실행해야할 필요가 없어졌습니다. 저희가 원하는 테스트 더블을 사용하는 것도 가능해졌습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;MockDuplicatedReservationCheck&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;implements&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DuplicatedReservationCheck&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;  
+  
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Map&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Set&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; store &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;ConcurrentHashMap&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+  
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Override&lt;/span&gt;  
+    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;synchronized&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Boolean&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;isDuplicated&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; key&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; value&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;  
+        store&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;putIfAbsent&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;key&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;HashSet&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;!&lt;/span&gt;store&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;key&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;value&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;  
+  
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Override&lt;/span&gt;  
+    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;deleteValue&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; key&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; value&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;  
+        &lt;span class=&quot;token class-name&quot;&gt;Set&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; values &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; store&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;key&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+        &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;values &lt;span class=&quot;token operator&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;  
+            &lt;span class=&quot;token keyword&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;IllegalArgumentException&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;  
+        values&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;remove&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;value&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+        &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;values&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;isEmpty&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;  
+            store&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;remove&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;key&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;  
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;  
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;해당 객체를 여러 테스트에서도 쉽게 사용할 수 있게 테스트용 Bean으로 주입하는 Configuration클래스를 만들었습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token annotation punctuation&quot;&gt;@TestConfiguration&lt;/span&gt;  
+&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;abstract&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;TestConfiguration&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;  
+  
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Bean&lt;/span&gt;  
+    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DuplicatedReservationCheck&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;duplicatedReservationCheck&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;  
+        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;MockDuplicatedReservationCheck&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;  
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;이제 원하는 통합테스트에 @Import문으로 해당 Configuration을 사용하게 해줄 수 있습니다.&lt;/p&gt;
+&lt;h2&gt;CI 빌드 속도 개선&lt;/h2&gt;
+&lt;p&gt;이제 CI 빌드 과정에서 Redis를 설치할 필요가 없어졌습니다.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/0a40aa1d-b6f9-4b58-b96f-2d1d8b154da9&quot; alt=&quot;Pasted image 20240415174857&quot;&gt;&lt;/p&gt;
+&lt;p&gt;해당 부분을 삭제하고 빌드 속도가 40초 정도 개선되는 효과를 볼 수 있었습니다. &lt;/p&gt;
+&lt;h2&gt;마치며&lt;/h2&gt;
+&lt;p&gt;간단한 오류로 시작된 리팩토링이었지만 오류를 해결하면서 성능 개선까지 얻게 된 값진 경험이었습니다.
+하지만 interface가 만능은 아니라고 생각합니다. 무분별한 추상화는 복잡한 코드와 다량의 클래스를 낳을 수 있기 때문입니다.&lt;/p&gt;
+&lt;p&gt;또한 테스트 부분은 고민이 있는데요, 현재 프로덕션 코드에서 Redis를 사용하고 있기 때문에 이를 더블로 대체하는 것이 좋은 방법이었는가는 물음표가 띄워집니다. 해당 부분은 좀 더 기술을 사용하는 학습을 진행하며 천천히 고민을 즐겨보려 합니다.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;참고 &lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://tecoble.techcourse.co.kr/post/2021-11-21-dip/&quot;&gt;https://tecoble.techcourse.co.kr/post/2021-11-21-dip/&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[알아보고 적용하는 DB Replication]]></title><description><![CDATA[학습 계기 부하테스트를 진행하던 중 읽기와 쓰기 요청이 동시에 수행될 때 읽기 속도가 현저히 줄어드는 현상 발견하게 되었습니다.  쿼리 최적화를 수행하고 인덱스를 조정해보았지만 결국 DB…]]></description><link>https://jinkshower.github.io/db_replication/</link><guid isPermaLink="false">https://jinkshower.github.io/db_replication/</guid><pubDate>Fri, 19 Apr 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;학습 계기&lt;/h2&gt;
+&lt;p&gt;부하테스트를 진행하던 중 읽기와 쓰기 요청이 동시에 수행될 때 읽기 속도가 현저히 줄어드는 현상 발견하게 되었습니다. &lt;/p&gt;
+&lt;p&gt;쿼리 최적화를 수행하고 인덱스를 조정해보았지만 결국 DB에서의 병목 현상을 해결할 필요가 있음을 인지하게 되었습니다. &lt;/p&gt;
+&lt;p&gt;이에 따라 데이터베이스 레플리케이션을 학습하고 적용한 기록을 공유하고자 합니다.&lt;/p&gt;
+&lt;h2&gt;데이터베이스 레플리케이션&lt;/h2&gt;
+&lt;p&gt;데이터베이스가 하나뿐이라면 해당 데이터베이스에서 장애가 발생했을 시 데이터가 유실되고 사용자에게 장애 시간동안 서비스를 제공할 수 없게 됩니다.&lt;/p&gt;
+&lt;p&gt;따라서 Fail Over(장애 대응)을 위한 대비책으로 Scale-up이나 Scale-out을 선택하게 됩니다.&lt;/p&gt;
+&lt;p&gt;하지만 Scale up 만으로는 단일 장애지점(SPOF)이 하나의 데이터베이스에 그대로 있으므로 자연스레 Scale-out으로 SPOF를 분산하는 방법이 추천됩니다.
+(물론 엄청 좋은 데이터 베이스가 엄청 많이 있으면 더 좋겠죠 )&lt;/p&gt;
+&lt;p&gt;보통의 애플리케이션에서 사용자 요청은 읽기가 많은 비율을 차지하기 때문에 데이터베이스를 2개 이상으로 만든 상태에서 하나의 서버는 Write만을 담당하고 나머지 서버는 Read를 담당하게 한다면 성능 향상과 읽기 요청의 분산을 꾀할 수 있습니다.&lt;/p&gt;
+&lt;p&gt;즉, Replication(복제)를 통해 데이터베이스를 Scale-out(여러대 두기)하고 복제된 서버들에 읽기/쓰기 역할을 담당하게 하는 것이 데이터베이스 레플리케이션입니다.&lt;/p&gt;
+&lt;h2&gt;데이터 동기화&lt;/h2&gt;
+&lt;p&gt;복제라는 이름에서 알 수 있듯이 레플리케이션에서 중요한 부분은 데이터의 동기화입니다. 쓰기 요청이 이루어지지 않은 데이터베이스를 복제하면 당연히 읽기 데이터베이스도 같은 데이터를 가지겠지만 웹 애플리케이션은 실시간으로 읽기와 쓰기가 반복되기 때문입니다.&lt;/p&gt;
+&lt;p&gt;제가 공부하고 있는 MySQL에서 어떻게 레플리케이션이 이루어지는지 학습해봤습니다.&lt;/p&gt;
+&lt;h3&gt;MySQL의 레플리케이션&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;원본 데이터 서버는 소스 서버, 복제된 데이터를 가진 서버는 레플리카 서버라고 명칭합니다&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;MySQL에서 발생하는 모든 변경사항(이벤트)은 바이너리 로그에 순서대로 기록되고 이 바이너리 로그를 레플리카 서버가 받아서 데이터에 반영합니다(동기화)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/ef209c51-a550-44db-b005-3121e2d14561&quot; alt=&quot;Pasted image 20240424175342&quot;&gt;&lt;/p&gt;
+&lt;p&gt; 해당 그림에 나온 요소들을 간략히 설명하려 합니다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;트랜잭션 처리 스레드
+SQL쿼리를 실행하고 소스 서버에 데이터를 적용합니다. 작업한 내용을 바이너리 로그에 기록합니다.&lt;/li&gt;
+&lt;li&gt;바이너리 로그
+MySQL 서버에서 일어난 모든 사항을 기록하는 로그 파일&lt;/li&gt;
+&lt;li&gt;바이너리 로그 덤프 쓰레드
+바이너리 로그 -&gt; 레플리카 서버로 전송하는 역할&lt;/li&gt;
+&lt;li&gt;레플리케이션 I/O스레드
+복제가 시작되면 생성되어 바이너리 로그 덤프 쓰레드에서 바이너리 로그를 받아 릴레이 로그에 저장하고 사라집니다.&lt;/li&gt;
+&lt;li&gt;릴레이로그
+소스 서버로부터 읽어온 바이너리 로그를 저장하는 로그 파일&lt;/li&gt;
+&lt;li&gt;레플리케이션 SQL 쓰레드
+릴레이 로그의 이벤트를 실행하여 레플리카 서버 데이터에 반영&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;이에 따라 소스 서버에 write쿼리가 오면&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;트랜잭션 처리 스레드가 쿼리를 실행, 소스 서버 데이터에 반영하고 &lt;/li&gt;
+&lt;li&gt;이를 바이너리 로그에 기록하고&lt;/li&gt;
+&lt;li&gt;바이너리 덤프 쓰레드가 이를 레플리카 서버로 전송하고&lt;/li&gt;
+&lt;li&gt;레플리케이션 I/O쓰레드가 바이너리 로그를 받아 릴레이로그에 저장하고&lt;/li&gt;
+&lt;li&gt;레플리케이션 SQL 쓰레드가 릴레이로그의 이벤트를 실행합니다&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;SpringBoot 프로젝트에 적용&lt;/h2&gt;
+&lt;p&gt;레플리케이션의 원리를 학습했으니, 프로젝트에 적용하기 위해 AWS RDS의 Read Replica를 생성하였습니다.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://velog.io/@skyjoon34/MySQL-RDS-%EC%9D%BD%EA%B8%B0%EC%A0%84%EC%9A%A9-replica-%EC%A0%81%EC%9A%A9&quot;&gt;해당 글&lt;/a&gt;을 참고하여 DataSource를 @Transactional이 readOnly인지에 따라 분기처리하는 코드를 작성해봤습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token annotation punctuation&quot;&gt;@Configuration&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;abstract&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DataSourceConfiguration&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+
+	&lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;token constant&quot;&gt;SOURCE_SERVER&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;SOURCE&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;token constant&quot;&gt;REPLICA_SERVER&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;REPLICA&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+	&lt;span class=&quot;token annotation punctuation&quot;&gt;@Bean&lt;/span&gt;
+	&lt;span class=&quot;token annotation punctuation&quot;&gt;@Qualifier&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token constant&quot;&gt;SOURCE_SERVER&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+	&lt;span class=&quot;token annotation punctuation&quot;&gt;@ConfigurationProperties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;prefix &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;spring.datasource.source&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;//(1)&lt;/span&gt;
+	&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DataSource&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;sourceDataSource&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DataSourceBuilder&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;create&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+			&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+	&lt;span class=&quot;token annotation punctuation&quot;&gt;@Bean&lt;/span&gt;
+	&lt;span class=&quot;token annotation punctuation&quot;&gt;@Qualifier&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token constant&quot;&gt;REPLICA_SERVER&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+	&lt;span class=&quot;token annotation punctuation&quot;&gt;@ConfigurationProperties&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;prefix &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;spring.datasource.replica&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;//(2)&lt;/span&gt;
+	&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DataSource&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;replicaDataSource&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DataSourceBuilder&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;create&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+			&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+	&lt;span class=&quot;token annotation punctuation&quot;&gt;@Bean&lt;/span&gt;
+	&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DataSource&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;routingDataSource&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;
+		&lt;span class=&quot;token annotation punctuation&quot;&gt;@Qualifier&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token constant&quot;&gt;SOURCE_SERVER&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DataSource&lt;/span&gt; sourceDataSource&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; 
+		&lt;span class=&quot;token annotation punctuation&quot;&gt;@Qualifier&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token constant&quot;&gt;REPLICA_SERVER&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DataSource&lt;/span&gt; replicaDataSource &lt;span class=&quot;token comment&quot;&gt;//(3)&lt;/span&gt;
+	&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;token class-name&quot;&gt;RoutingDataSource&lt;/span&gt; routingDataSource &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;RoutingDataSource&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; 
+
+		&lt;span class=&quot;token class-name&quot;&gt;HashMap&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Object&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Object&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; dataSourceMap &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;HashMap&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; 
+		dataSourceMap&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;put&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;source&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; sourceDataSource&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+		dataSourceMap&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;put&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;replica&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; replicaDataSource&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+		routingDataSource&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;setTargetDataSources&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;dataSourceMap&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; 
+		routingDataSource&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;setDefaultTargetDataSource&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;sourceDataSource&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; 
+
+		&lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; routingDataSource&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+	&lt;span class=&quot;token annotation punctuation&quot;&gt;@Bean&lt;/span&gt;
+	&lt;span class=&quot;token annotation punctuation&quot;&gt;@Primary&lt;/span&gt;
+	&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DataSource&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;dataSource&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;//(4)&lt;/span&gt;
+		&lt;span class=&quot;token class-name&quot;&gt;DataSource&lt;/span&gt; determinedDataSource &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;routingDataSource&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;sourceDataSource&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;replicaDataSource&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+		&lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;LazyConnectionDataSourceProxy&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;determinedDataSource&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token annotation punctuation&quot;&gt;@Slf4j&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;RoutingDataSource&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;AbstractRoutingDataSource&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;//(5)&lt;/span&gt;
+
+	&lt;span class=&quot;token annotation punctuation&quot;&gt;@Override&lt;/span&gt;
+	&lt;span class=&quot;token keyword&quot;&gt;protected&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;determineCurrentLookupKey&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; lookupKey &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;TransactionSynchronizationManager&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;isCurrentTransactionReadOnly&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;replica&quot;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;source&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+		log&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;Current DataSource is {}&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; lookupKey&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+		&lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; lookupKey&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;속도 측정&lt;/h2&gt;
+&lt;p&gt;이제 레플리케이션의 효과를 측정해야겠죠?&lt;/p&gt;
+&lt;p&gt;(100명이 5초간격으로 2분간 조회와 쓰기 요청을 동시에 보낸 경우)
+DB replication 적용 전의 읽기 성능
+&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/e42383b6-81a3-4e75-9d58-16ee5bc21b79&quot; alt=&quot;Pasted image 20240412194411&quot;&gt;&lt;/p&gt;
+&lt;p&gt;적용 후 읽기 성능
+&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/8d9d7d62-90e3-4d7b-be97-d6302d8f1a3d&quot; alt=&quot;Pasted image 20240412193344&quot;&gt;&lt;/p&gt;
+&lt;p&gt;응답시간과 TPS에서 60프로 정도의 성능 개선이 일어남을 확인할 수 있었습니다.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;참고&lt;/p&gt;
+&lt;p&gt;Real MySQL 8.0 - 백은빈, 이성욱&lt;/p&gt;</content:encoded></item><item><title><![CDATA[조회 API 성능 개선]]></title><description><![CDATA[학습계기 프로젝트를 진행하며 api마다 부하테스트로 성능을 측정하고 있었습니다. 이 중 가장 조회가 많을 것이라 예상되는 좌석 조회 api가 너무나 성능이 떨어지는 충격적인 결과를 보게 되었는데요.. (2분동안 100명이 1…]]></description><link>https://jinkshower.github.io/api_performance_improvment/</link><guid isPermaLink="false">https://jinkshower.github.io/api_performance_improvment/</guid><pubDate>Mon, 15 Apr 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;학습계기&lt;/h2&gt;
+&lt;p&gt;프로젝트를 진행하며 api마다 부하테스트로 성능을 측정하고 있었습니다. 이 중 가장 조회가 많을 것이라 예상되는 좌석 조회 api가 너무나 성능이 떨어지는 충격적인 결과를 보게 되었는데요..&lt;/p&gt;
+&lt;p&gt;(2분동안 100명이 10초 간격으로 조회요청시)
+&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/69471f59-4e86-4ea5-9345-926f8232f240&quot; alt=&quot;Pasted image 20240417170414&quot;&gt;
+오류율 25%, tps 2.9, 평균 응답시간 3만대의 처참한 결과를 받게 되었습니다.&lt;/p&gt;
+&lt;p&gt;이번 기록은 해당 api를 차근차근 개선하면서 배운 점과 성능 기록을 다루려고 합니다.&lt;/p&gt;
+&lt;h2&gt;원인 찾기&lt;/h2&gt;
+&lt;p&gt;좌석 조회 api가 이렇게 느린 이유를 찾는 것이 우선이라고 생각했습니다.
+해당 메서드를 따라가면서 for문이 돌고 있는 건 아닌지, 불필요한 객체 생성을 하는지 점검 하고 이내 쿼리를 찾게 되었습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;select&lt;/span&gt;  
+	s1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;horizontal&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;  
+	s1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;vertical  
+&lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt;  
+	seats s1_0  
+&lt;span class=&quot;token keyword&quot;&gt;where&lt;/span&gt;  
+	s1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;concert_id&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;?  
+  &lt;span class=&quot;token operator&quot;&gt;and&lt;/span&gt; s1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;reserved&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;?&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;select&lt;/span&gt;
+	s1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;horizontal&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+	s1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;vertical
+&lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt;
+	seats s1_0
+&lt;span class=&quot;token keyword&quot;&gt;where&lt;/span&gt;
+	s1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;concert_id&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;?
+ &lt;span class=&quot;token operator&quot;&gt;and&lt;/span&gt; s1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;availability&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;?&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;예약이 된 좌석의 행열, 사용불가능한 좌석의 행열을 찾는 2번의 쿼리를 실행중이었는데요, 해당 쿼리의 실행계획을 확인했습니다.&lt;/p&gt;
+&lt;p&gt;(seats 테이블에 데이터가 10만개 있을 때)
+&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/0f790ca2-1d64-4169-b0fd-ba409e438588&quot; alt=&quot;Pasted image 20240417121808&quot;&gt;
+테이블 풀 스캔을 한 것을 확인할 수 있습니다.&lt;/p&gt;
+&lt;p&gt;즉, 10만개의 데이터를 풀스캔하는 쿼리 2개가 처참한 성능의 원인임을 확인했습니다.&lt;/p&gt;
+&lt;h2&gt;1차 개선 - 쿼리개선&lt;/h2&gt;
+&lt;p&gt;가장 먼저 두개의 쿼리를 하나로 합치는 작업부터 진행했습니다.&lt;/p&gt;
+&lt;p&gt;구현할때는 생각도 못했는데 왜 리팩토링 할때는 이렇게 문제점이 잘보일까요? 당연히 or을 사용하면 1개의 쿼리로 해결 할 수 있는 문제였습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;select&lt;/span&gt;  
+    s1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;horizontal&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;  
+    s1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;vertical&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;  
+    s1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;locked&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;  
+    s1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;reserved  
+&lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt;  
+    seats s1_0  
+&lt;span class=&quot;token keyword&quot;&gt;where&lt;/span&gt;  
+    s1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;concert_id&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;?  
+  &lt;span class=&quot;token operator&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;  
+    s1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;reserved&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;?  
+        &lt;span class=&quot;token operator&quot;&gt;or&lt;/span&gt; s1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;availability&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;?  
+    &lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;(1차 개선 후 측정결과)
+&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/0226aaaa-89ea-4e81-aec3-0b9f1654755c&quot; alt=&quot;Pasted image 20240417203050&quot;&gt;&lt;/p&gt;
+&lt;p&gt;풀테이블 스캔을 하는 쿼리가 하나 줄었을 뿐인데 오류가 발생하지 않고 tps,응답시간에 향상이 있었음을 확인했습니다.&lt;/p&gt;
+&lt;h2&gt;2차  개선 - 인덱스&lt;/h2&gt;
+&lt;p&gt;해당 테이블에 인덱스 작업을 하지 않았기 때문에 인덱스를 적용하면 성능을 더 개선할 수 있을거라 생각했는데요.
+인덱스의 개념과 적용방법은 &lt;a href=&quot;https://jinkshower.github.io/database_index/&quot;&gt;이전글&lt;/a&gt;을 참고하시면 좋을 것 같습니다.&lt;/p&gt;
+&lt;p&gt;인덱스를 적용하기 위해 컬럼들을 확인 할까요?
+&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/867dd6b7-7404-4ca2-a567-ebc65776ed54&quot; alt=&quot;Pasted image 20240424095115&quot;&gt;&lt;/p&gt;
+&lt;p&gt;where 절에 조건이 명시 되지 않으면 인덱스를 타지 않기 때문에 availability, reserved 두 컬럼을 후보로 두었습니다.&lt;/p&gt;
+&lt;p&gt;이에 availability, reserved를 복합 인덱스로 두고 인덱스를 타게 하기 위하여 쿼리를 변경해보았습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;SELECT&lt;/span&gt;  
+    s1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;horizontal&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;  
+    s1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;vertical&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;  
+    s1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;availability&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;  
+    s1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;reserved  
+&lt;span class=&quot;token keyword&quot;&gt;FROM&lt;/span&gt;  
+    seats s1_0  
+&lt;span class=&quot;token keyword&quot;&gt;WHERE&lt;/span&gt;  
+    &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;  
+        s1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;reserved &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; ? &lt;span class=&quot;token operator&quot;&gt;OR&lt;/span&gt; s1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;availability &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; ?  
+        &lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;  
+  &lt;span class=&quot;token operator&quot;&gt;AND&lt;/span&gt; s1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;concert_id &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; ?&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;하지만 실행계획은 그대로였습니다.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/1547d9e0-2730-4d3f-8d0b-27d2511189b8&quot; alt=&quot;Pasted image 20240424124427&quot;&gt;&lt;/p&gt;
+&lt;p&gt;왜 인덱스를 타지 않았을까요?&lt;/p&gt;
+&lt;h3&gt;인덱스를 타지 않는 조건&lt;/h3&gt;
+&lt;p&gt;이에 대해 인덱스를 타지 않는 조건에 대해 학습하게 되었습니다.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;인덱스 컬럼을 변환하는 쿼리&lt;/li&gt;
+&lt;li&gt;NULL 조건을 사용하는 쿼리&lt;/li&gt;
+&lt;li&gt;LIKE 문에서 와일드 카드를 앞에 두는 쿼리&lt;/li&gt;
+&lt;li&gt;OR 조건에서 모든 컬럼에 인덱스 처리가 되지 않았을 때&lt;/li&gt;
+&lt;li&gt;읽어야 할 레코드가 전체 테이블의 20%를 상회하는 쿼리&lt;/li&gt;
+&lt;li&gt;조건문에 인덱스 컬럼을 명시하지 않는 쿼리&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;해당 조건에서 4번이 저의 상황과 일치하다고 판단되었습니다. &lt;/p&gt;
+&lt;p&gt;복합 인덱스를 사용할 시 각 컬럼에 단일 인덱스를 지정하여 합치는 것과 달리 하나의 인덱스가 생성되므로 or조건의 모든 컬럼에 인덱스 처리를 했다고 판단하지 않은 것이라고 예상했습니다.(해당 부분은 좀 더 공부가 필요한 것 같습니다.)&lt;/p&gt;
+&lt;h3&gt;인덱스 수정 후 측정 결과&lt;/h3&gt;
+&lt;p&gt;인덱스를 타지 않는 쿼리에 대해 학습하고 복합 인덱스가 아닌, reserved와 availability 각각의 컬럼에 인덱스 처리를 하면 되겠다고 판단하게 되었습니다.&lt;/p&gt;
+&lt;p&gt;(각 컬럼 인덱스 처리 후 실행계획)
+&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/14481d19-6374-4f8c-ba97-8dd6d3bf25a7&quot; alt=&quot;Pasted image 20240424141207&quot;&gt;&lt;/p&gt;
+&lt;p&gt;(2차 개선 후 측정결과)
+&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/87fa645b-f502-488f-8ebc-ecd2e79bbe08&quot; alt=&quot;Pasted image 20240417170033&quot;&gt;
+드디어 눈에 띄는 개선 결과가 측정되었습니다&lt;/p&gt;
+&lt;h2&gt;3차 개선 - 캐싱&lt;/h2&gt;
+&lt;p&gt;해당 api는 예약 불가능한 좌석의 정보만 보내주고 있는게 아니라 콘서트에 대한 정보도 같이 보내주고 있었는데요,
+실시간으로 예약 상태가 변경되는 좌석과 달리 콘서트 정보는 변경이 일어날 확률이 낮다고 판단했습니다.&lt;/p&gt;
+&lt;p&gt;따라서 콘서트 정보는 캐싱을 적용할 수 있을 거라 판단되었고, 간단하게 적용할 수 있는 스프링의 로컬캐시를 적용해보기로 했습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token annotation punctuation&quot;&gt;@Configuration&lt;/span&gt;  
+&lt;span class=&quot;token annotation punctuation&quot;&gt;@EnableCaching&lt;/span&gt;  
+&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;CacheConfig&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;  
+  
+    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;token constant&quot;&gt;CONCERT_CACHE&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;concertCache&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+    
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Bean&lt;/span&gt;  
+    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;CacheManager&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;cacheManager&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;  
+        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;ConcurrentMapCacheManager&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token constant&quot;&gt;CONCERT_CACHE&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;  
+  
+    &lt;span class=&quot;token comment&quot;&gt;//매 6시간마다 콘서트 캐시 제거  &lt;/span&gt;
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@CacheEvict&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;allEntries &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; value &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token constant&quot;&gt;CONCERT_CACHE&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;  
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Scheduled&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;cron &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;0 0 */6 * * *&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;  
+    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;cacheEvict&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;  
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;  
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;로컬 캐시는 ttl을 줄 수 없기 때문에 6시간 간격으로 캐시를 비워주는 스케쥴러 기능을 같이 사용했습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token annotation punctuation&quot;&gt;@Cacheable&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;value &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;CacheConfig&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token constant&quot;&gt;CONCERT_CACHE&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; key &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;#concertId&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;해당 어노테이션을 캐싱이 필요한 메서드에 추가해주었습니다.&lt;/p&gt;
+&lt;p&gt;(3차 개선 후 측정결과)
+&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/e71dd8e9-7fde-4e26-a607-386ed1dafd99&quot; alt=&quot;Pasted image 20240417202422&quot;&gt;&lt;/p&gt;
+&lt;p&gt;2차 개선에서 소폭의 성능상승이 있음을 확인했습니다.&lt;/p&gt;
+&lt;h2&gt;4차 개선 - 테이블 설계 변경&lt;/h2&gt;
+&lt;p&gt;3차 개선까지 한 후 인덱스와 실행계획을 다시 살펴봤습니다.
+그리고 제 고정관념에 대해서 깨닫게 되었는데요.&lt;/p&gt;
+&lt;p&gt;저는 &lt;code class=&quot;language-text&quot;&gt;콘서트의 예약 불가능한 좌석&lt;/code&gt;을 찾기 위해서 당연스럽게 where 절에 concertId를 첫번째 조건으로 명시했었습니다.&lt;/p&gt;
+&lt;p&gt;하지만 2차개선에서 인덱스를 타기 위해 조건절을 변경하면서 이러한 생각이 깨지게 되었는데요, 제가 당연하게 생각했던 것이 db입장에서는 비효율적인 쿼리를 만들고 있었습니다.&lt;/p&gt;
+&lt;p&gt;제가 원했던 좌석의 행열정보는
+&lt;code class=&quot;language-text&quot;&gt;concertId -&gt; availability or reserved&lt;/code&gt;의 순서로 서치를 해도,
+&lt;code class=&quot;language-text&quot;&gt;availabilty or reserved -&gt; concertId&lt;/code&gt; 의 순서로 서치를 해도 같은 결과가 나옴을 깨달았습니다. &lt;/p&gt;
+&lt;p&gt;또한 두개의 컬럼에 각각 인덱스를 거는 것보다 좌석의 상태를 하나의 필드로 관리하고, 이에 인덱스를 걸면 추가 인덱스에 드는 저장공간 소모를 막을 수 있고, 좌석 상태에 대한 관리점을 하나로 모을 수 있겠다는 생각이 들었습니다.&lt;/p&gt;
+&lt;p&gt;따라서 availability, reserved를 status라는 enum으로 모으고 status 필드 하나에만 인덱스를 걸어 보았습니다.&lt;/p&gt;
+&lt;p&gt;(바뀐 쿼리)&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;select&lt;/span&gt;  
+    s1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;horizontal&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;  
+    s1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;vertical&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;  
+    s1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;status&lt;/span&gt;  
+&lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt;  
+    seats s1_0  
+&lt;span class=&quot;token keyword&quot;&gt;where&lt;/span&gt;  
+    &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;  
+        s1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;?  
+            &lt;span class=&quot;token operator&quot;&gt;or&lt;/span&gt; s1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;? 
+        &lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;  
+  &lt;span class=&quot;token operator&quot;&gt;and&lt;/span&gt; s1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;concert_id&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;?&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;(실행계획이 길어져 markdown으로 대체 합니다)&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;-&gt; Filter: (s1_0.concert_id = 2)  (cost=4.56 rows=4.5) (actual time=0.13..0.136 rows=8 loops=1)  
+    -&gt; Index range scan on s1_0 using idx_status over (status = &apos;RESERVED&apos;) OR (status = &apos;LOCKED&apos;), with index condition: ((s1_0.`status` = &apos;RESERVED&apos;) or (s1_0.`status` = &apos;LOCKED&apos;))  (cost=4.56 rows=9) (actual time=0.128..0.133 rows=8 loops=1)&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;실행 계획을 통해 한 번의 인덱스 스캔으로 먼저 8개의 로우로 데이터를 좁히고 그 안에서 concertId를 필터했음을 알 수 있습니다.&lt;/p&gt;
+&lt;p&gt;(4차 개선 후 측정결과)
+&lt;img src=&quot;https://github.com/jinkshower/jinkshower.github.io/assets/135244018/14134eaf-59a2-4fd5-8b3c-5b38923297c7&quot; alt=&quot;Pasted image 20240418165800&quot;&gt;
+처음의 결과와 비교해보면 30배 정도의 성능 차이가 나는 것을 확인할 수 있습니다.&lt;/p&gt;
+&lt;h2&gt;마치며&lt;/h2&gt;
+&lt;p&gt;이렇게 api의 성능을 차례차례 개선한 기록을 작성해보았습니다.&lt;/p&gt;
+&lt;p&gt;해당 방법은 status의 수가 적을때 유효하다는 단점이 있습니다. &lt;/p&gt;
+&lt;p&gt;status가 비슷한 데이터가 많아질수록 풀스캔에 가까운 쿼리가 발생할 것이라고 예상되는데요, 하지만 예매가 거의 되지 않은 상황에서는 속도 차이가 많이 나기 때문에 의미있는 결과를 냈다고 생각합니다.&lt;/p&gt;
+&lt;p&gt;또한 로컬 캐시를 사용했기 때문에 스케쥴러가 분산 서버에서는 여러개 발생해 의도치 않은 캐시 삭제가 일어날 가능성도 있으니 다른 환경에서는 변경이 필요한 방법이라고 생각됩니다.&lt;/p&gt;
+&lt;p&gt;직접 인덱스를 걸고 실행계획을 확인하고 부하테스트를 진행하면서 제가 작성한 코드나 쿼리에 대해 다시 한번 돌아보는 계기가 되었습니다. 하나의 쿼리를 작성할 때 이 데이터가 10만개, 100만개가 된다면 어떻게 될까를 생각하게 해준 좋은 경험이었다고 생각합니다.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Redis, 좀 더 자세히 알아볼까?]]></title><description><![CDATA[학습 계기 저번글에서 프로젝트의 예매 로직에서의 동시성 제어를 Redis로 해결하기로 결정했습니다. redis가 프로젝트의 핵심기능에서 중요한 역할을 하는 만큼 좀 더 자세히 학습할 필요가 있다고 생각했습니다. 또한 프로젝트에서 Redis…]]></description><link>https://jinkshower.github.io/redis_deeper/</link><guid isPermaLink="false">https://jinkshower.github.io/redis_deeper/</guid><pubDate>Fri, 12 Apr 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;학습 계기&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&quot;https://jinkshower.github.io/ticket_reservation_concurrency/&quot;&gt;저번글&lt;/a&gt;에서 프로젝트의 예매 로직에서의 동시성 제어를 Redis로 해결하기로 결정했습니다. redis가 프로젝트의 핵심기능에서 중요한 역할을 하는 만큼 좀 더 자세히 학습할 필요가 있다고 생각했습니다.&lt;/p&gt;
 &lt;p&gt;또한 프로젝트에서 Redis의 관리가 중요한 대목으로 떠올랐는데요! 이번 글에서는 Redis를 자세히 알아보고 저희 프로젝트에서 어떻게 Redis를 적용했는지 다루어보려고 합니다.&lt;/p&gt;
 &lt;h2&gt;Redis&lt;/h2&gt;
