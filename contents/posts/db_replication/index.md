@@ -138,6 +138,26 @@ public class RoutingDataSource extends AbstractRoutingDataSource { //(5)
 }
 ```
 
+
+코드를 설명하겠습니다.
+
+(1) & (2) : DataSource를 직접 2개로 만들어 주기 위해 `@ConfigurationProperties`를 사용하여 application.properties의 prefix(Source, Replica)에 명시한 정보로 Datasource를 빈으로 등록합니다.
+Datasource가 2개 이므로 spring에게 어떠한 빈을 사용할 지 명시하기 위해 `@Quailifier` 를 사용했습니다.
+
+(5) : Spring의 데이터 베이스 라우팅을 위해 사용되는 `AbstractRoutingDataSource`를 상속받아 커스텀한 구현체 입니다. `TransactionSynchronizationManager`는 현재 트랜잭션이 읽기 전용인지 구분하고 읽기 전용이면 replica, 아니면 source를 반환합니다.
+
+(3) : (5)의 구현체를 생성하고, (1),(2)에서 생성한 각각의 DataSource를 파라미터로 받아 사용합니다. 
+Map의 구현체에 저희가 (5)에서 정한 key와 파라미터의 DataSource를 넣고 `setTargetDataSources()`의 인자로 만든 Map을 넣어 줍니다.
+
+이 메서드는 내부적으로 `determineTargetDataSource()`를 호출합니다.
+![Pasted image 20240429165757](https://github.com/jinkshower/jinkshower.github.io/assets/135244018/09d6de71-f5d4-4dd2-b0ef-4112557e56b7)
+
+`determineTargetDataSource()`는 저희가 오버라이딩한 `determineCurrentLookupKey()` 를 사용하고 `lookupKey` 로 사용할 DataSource를 get하고 반환하는 것을 확인할 수 있습니다. 
+
+(4) : Spring은 트랜잭션에 진입하는 순간 DB Connection을 가져옵니다. 이때 Ehcache같은 캐시를 사용하거나 영속성 컨텍스트의 1차캐시에 있는 정보를 가지고 올 때 불필요한 데이터베이스 풀의 커넥션을 점유할 수 있고, 트랜잭션에 진입한 이후 DataSource를 결정해야 할때 (저희의 경우 입니다) 미리 DataSource를 결정해버리면 분기를 나눌수가 없습니다.
+
+따라서 실제로 커넥션이 필요한 경우에만 커넥션을 점유할 수 있게 프록시 객체를 @Primary로 먼저 반환하고  `getConnection()`으로 실제 DataSource를 가져올 때 사용될 수 있도록 하는 설정입니다.
+
 ## 속도 측정
 
 이제 레플리케이션의 효과를 측정해야겠죠?
@@ -155,3 +175,4 @@ DB replication 적용 전의 읽기 성능
 참고
 
 Real MySQL 8.0 - 백은빈, 이성욱
+https://sup2is.github.io/2021/07/08/lazy-connection-datasource-proxy.html
