@@ -30,18 +30,12 @@ public void createReservation(Long userId, Long concertId,
     Seat seat = seatRepository.findSeatForReservation(concertId,  
         requestDto.getHorizontal(), requestDto.getVertical());  
   
-    if (!seat.isReservable()) {  
-        throw new CustomRuntimeException("예약 불가능한 좌석입니다.");  
-    }  
+    seat.validateAvailability();
     seat.reserve();  
   
-    Reservation reservation = Reservation.builder()  
-        .status("Y")  
-        .userId(userId)  
-        .concertId(concertId)  
-        .seatId(seat.getId())  
-        .build();  
-	reservationRepository.save(reservation);
+    Reservation reservation = new Reservation(userId, concertId, seat.getId());
+    reservationRepository.save(reservation);
+    }
 ```
 
 저희는 콘서트의 좌석을 행과 열로 관리하고 있기때문에 findSeatForReservation()을 통해서 해당 콘서트의 id, 행열 정보로 seat를 찾고 seat가 예약 가능한지 살펴보고 예약이 가능하다면 seat의 예약 필드를 바꾸고 reservation을 만드는 로직을 사용하고 있습니다.
@@ -112,18 +106,12 @@ public synchronized void createReservation(Long userId, Long concertId,
     Seat seat = seatRepository.findSeatForReservation(concertId,  
         requestDto.getHorizontal(), requestDto.getVertical());  
   
-    if (!seat.isReservable()) {  
-        throw new CustomRuntimeException("예약 불가능한 좌석입니다.");  
-    }  
+    seat.validateAvailability();
     seat.reserve();  
   
-    Reservation reservation = Reservation.builder()  
-        .status("Y")  
-        .userId(userId)  
-        .concertId(concertId)  
-        .seatId(seat.getId())  
-        .build();  
-	reservationRepository.save(reservation);
+    Reservation reservation = new Reservation(userId, concertId, seat.getId());
+    reservationRepository.save(reservation);
+    }
 ```
 
 간단하게 예매 메서드에 synchronized 키워드를 추가하면 자바가 제공하는 동시성 제어를 사용할 수 있습니다.
@@ -208,18 +196,6 @@ Seat findSeatForReservation(Long concertId, String horizontal, String vertical);
 
 테스트 또한 통과합니다.
 
-## 그럼 둘 중에 뭘써야할까? 
-
-두 방식 모두 동시성을 원하는대로 제어할 수 있다고 판단하고 jmeter를 통해 성능을 측정해보았습니다.
-
-낙관적 락
-![Pasted image 20240407165746](https://github.com/jinkshower/jinkshower.github.io/assets/135244018/329add37-b716-456c-a34e-031007976aec)
-
-비관적 락
-![Pasted image 20240407165805](https://github.com/jinkshower/jinkshower.github.io/assets/135244018/7684d545-ae5c-4ec8-bf58-c311ede787a1)
-
-성능 면에서는 비관적락이 낙관적 락보다 조금 더 낫지만 그렇게 큰 차이가 아니라고 판단했습니다.
-
 ## 락을 꼭 써야할까?
 
 사실 락을 쓰지 않고 중복된 예매 생성을 막는 방법이 있습니다.
@@ -243,25 +219,29 @@ unique key violation이 중복된 예매에서 발생하는 것을 확인할 수
 ![Pasted image 20240415105618](https://github.com/jinkshower/jinkshower.github.io/assets/135244018/e8742978-98c4-4bc4-992d-20558c8f1442)
 테스트는 통과입니다.
 
+## 그럼 무슨 방법을 써야할까?
+
 낙관적 락, 비관적 락 혹은 unique constraint 모두 예매 중복 생성 방지라는 목표를 달성했지만 프로젝트에 적용하기에는 무리가 있다고 판단했습니다. 
 
 낙관적락은 update, 비관적 락은 select for update쿼리, unique constraint 모두 스레드 요청만큼 발생하게 됩니다. db에 요청 수만큼  쿼리가 날아가면 부하가 심해질 것입니다.
 
-현재 프로젝트의 비즈니스 로직에서 첫번째로 좌석을 예매하는 요청이 오면 다른 요청은 모두 예외로 처리하면 됩니다. 첫 번째 요청 이외에는 락을 획득하거나 db 조회를 할 이유가 없습니다.
-
 ## db에 부하를 주지 않는 방법은 없을까?
 
-앞서 말한대로 첫번째 좌석을 예매하는 요청이외의 다른 스레드의 요청을 예외처리하면 db에 쿼리를 날리지 않고도 예매로직을 실현할 수 있을 거라 생각했습니다.
+두가지 방법을 생각해봤습니다.  
 
-이를 위해 Java의 Map과 같은 구조로 좌석의 정보를 key값으로 설정하고 해당 key가 있으면 예외로 처리하면 되지 않을까라는 생각을 하게 되었습니다.
+첫 번째 방법은 첫번째 좌석을 예매하는 요청이외의 다른 스레드의 요청을 예외처리하면 db에 쿼리를 날리지 않을 수 있다고 생각했습니다.
 
-## Redis
+이를 위해 Java의 Map과 같은 구조로 좌석의 정보를 key, value로 설정하고 해당 key, value가 이미 있으면 예외로 처리하면 되지 않을까라는 생각을 하게 되었습니다.
 
-`해당 방법은 redis의 분산락을 사용하는 것이 아니라 redis의 자료구조의 성질을 이용합니다`
+두 번째 방법은 메시지 큐를 사용하여 사용자의 요청을 순서대로 처리하는 버퍼(Buffer)시스템을 도입하는 방법입니다.
 
+## 첫 번째 방법, Redis를 비관계형 데이터베이스로 사용하기
+  
 Redis는 인메모리 데이터베이스로서 데이터를 메모리에 저장하므로 빠른 응답 속도를 제공합니다.
 
 redis를 활용하면 분산DB환경에서도 따로 동작하는 공통의 db가 생기는 것이기 때문에 예매 로직이 문제없이 실행될 것이라 생각했습니다.
+
+비관계형 데이터베이스는 MongoDB도 있지만 저희 로직에서 빠른 성능이 필요했기 때문에 Redis를 우선적으로 선택하여 적용해봤습니다.
 
 ### redis 적용하기
 
@@ -306,6 +286,114 @@ Spring환경에서 redis를 코드로 활용하기 위하여 RedisTemplate를 @B
 애플리케이션에서 redis로 미리 예외처리를 모두 해줬기 때문에 db에 insert쿼리가 단 하나만 날아가는 모습입니다.
 ![Pasted image 20240407193443](https://github.com/jinkshower/jinkshower.github.io/assets/135244018/73a814d4-47eb-4e08-aca2-88224491cd33)
 
+두 번째 방법, 메시지 큐 이용하기
+
+두 번째 방법은 메시지 큐를 이용하는 방법입니다.
+
+메시지 큐는 기본적으로 큐(queue)라는 자료 구조를 사용하여 데이터를 저장하고, 이를 통해 발신자(sender)와 수신자(receiver) 간의 통신을 관리합니다.
+
+즉, 예매 요청은 기본적으로 메시지 큐에 발신하고, 메시지 큐를 순차적으로 중복이 제거되게 구현하면 저희는 큐에서 메시지를 수신해서 예약을 생성하면 될 것이라고 생각했습니다.
+
+이러한 아이디어를 가지고 적용할만한 메시지 큐 시스템을 찾게 되었습니다. 
+
+RabbitMQ, Kafka, Redis Pub/Sub등 많은 방법이 있었지만 저희 프로젝트에 적용해 본 것은 SQS였습니다.
+
+### SQS FIFO Queue
+
+Sqs를 적용하게 된 이유는  AWS의 공식문서를 읽어본 결과 저희 프로젝트에서 이미 원하는 Queue 시스템을 제공해주고 있었기 때문입니다.
+
+바로 Sqs FIFO Queue인데요, 동일한 요청은 자동으로 중복을 제거해주고 순서대로 요청을 처리해주는 Sqs의 Queue의 한 종류로 저희 프로젝트에서 딱 필요한 기능이라고 생각했습니다.
+
+또한 메시지 큐에 대한 이해도가 낮은 상태이기 때문에 다른 기술들의 높은 학습비용을 치루는 것보다 이미 잘 만들어진 시스템을 이용하고자 하는 마음도 있었습니다.
+
+### SQS 적용하기
+
+`Spring Boot 3.x 버전과 Spring Cloud Aws 3.x버전으로 진행했습니다.`
+
+```java
+@PostMapping  
+public SendResult<String> sendReservationMessage(  
+    @AuthenticationPrincipal UserDetailsImpl userDetails,  
+    @PathVariable Long concertId,  
+    @RequestBody ReservationRequestDto requestDto) {  
+    String payload = sqsRequestParser.toPayload(userDetails.getUser().getId(), concertId,  
+        requestDto);  
+  
+    return sqsTemplate.send(to -> to  
+        .queue(queueName)  
+        .messageGroupId(String.valueOf(concertId))  
+        .messageDeduplicationId(requestDto.getHorizontal() + requestDto.getVertical())  
+        .payload(payload));  
+}  
+  
+  
+@SqsListener("${cloud.aws.sqs.queue.name}")  
+public void createReservation(String message) {  
+    SqsRequest sqsRequest = sqsRequestParser.toRequest(message);  
+  
+    ReservationRequestDto requestDto = ReservationRequestDto.builder()  
+        .horizontal(sqsRequest.getHorizontal())  
+        .vertical(sqsRequest.getVertical())  
+        .build();  
+  
+    reservationService.createReservation(  
+        sqsRequest.getUserId(), sqsRequest.getConcertId(), requestDto);  
+}
+```
+
+[공식문서](https://docs.awspring.io/spring-cloud-aws/docs/3.0.0/reference/html/index.html#sqs-integration)를 참고하여 저희가 원하는 기능을 Sqs로 구현해보았습니다. 
+
+간단하게 설명드리자면 @PostMapping에서 받은 요청을 sqs로 보내는 메서드와 @SqsListener로 큐에 있는 메시지를 받은 메서드 두가지 입니다. 
+
+Sqs FIFO Queue는 GroupId로 메시지들을 구분하는데 DeduplicationId가 같은 요청은 자동으로 제거합니다. 
+
+따라서 GroupId 는 콘서트 id, DeduplicationId는 행열로 설정해주었습니다. 
+
+적용 후, 동시요청을 보내도록 하겠습니다.
+
+결과는 
+![Pasted image 20240429162111](https://github.com/jinkshower/jinkshower.github.io/assets/135244018/e344220b-4b7b-42a8-b830-c7764e592221)
+하나의 예매만 생성되었습니다.
+
+## 둘 중에 뭘쓰지?
+
+두 방법 모두 예매 중복생성문제를 해결할 수 있으니 성능을 측정하여 비교하기로 하였습니다.
+
+SQS
+![Pasted image 20240421113403](https://github.com/jinkshower/jinkshower.github.io/assets/135244018/06fbea41-f792-4ce8-976e-752de09cf3f5)
+(만개의 동시 요청시 Sqs는 3천개의 메시지 제한으로 일부가 실패했습니다)
+
+Redis
+![Pasted image 20240407165805](https://github.com/jinkshower/jinkshower.github.io/assets/135244018/9a98b6e1-94cd-49c1-b8c2-c6b5bfa60814)
+
+(Redis의 오류율은 의도된 것입니다)
+
+응답속도는 Sqs가 우위를 가지지만 Redis는 tps가 우위에 있습니다. 그렇게 큰 성능 차이는 아니라고 판단했습니다.
+
+## Redis를 선택한 이유
+
+저희는 Redis를 사용하기로 결정하였습니다.
+
+이유는 다음과 같습니다.
+
+성능에 큰 차이가 나지 않고, Sqs의 메시지 3천개 제한으로 오류가 발생하는 것도 주요한 이유였습니다. 
+
+하지만 무엇보다
+
+`Sqs FIFO Queue의 중복제거 5분 제약` 때문에 Sqs 적용이 기각되었습니다.
+
+[공식문서](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/using-messagededuplicationid-property.html)발췌
+```
+Message deduplication ID is the token used for deduplication of sent messages. If a message with a particular message deduplication ID is sent successfully, any messages sent with the same message deduplication ID are accepted successfully but aren't delivered during the 5-minute deduplication interval.
+```
+
+저희에게 중요한 부분만 보자면 Sqs FIFO Queue는 5분동안 같은 요청을 중복으로 보고 큐에 적재하지 않습니다. 그리고 이 5분이라는 제약은 고정입니다.
+
+예매 생성에는 해당 제약은 일견 문제가 없어보이지만 예매가 취소되면, 이를 실시간으로 반영할 수 없습니다. 취소되어도 5분 동안 해당 요청은 중복으로 취급됩니다. 
+
+정책상으로 취소가 되면 5분동안 예매가 불가능 하다는 비즈니스 제약을 추가한다고 해도 해당 좌석은 취소되면 사용자에게도 예매가 불가능하게 보여야 합니다.
+
+따라서 해당 Sqs를 제대로 저희 프로젝트에 적용하려면 대거의 도메인 코드 수정이 일어나야 한다고 판단했고 이는 저희가 얻을 성능적 이점에 비해 너무 큰 리스크라고 판단했습니다.
 
 ## 마치며
 
