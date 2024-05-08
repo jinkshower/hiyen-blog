@@ -5,7 +5,7 @@ date: 2024-03-31
 update: 2024-03-31
 tags:
   - jpa
-series: "jpa"
+series: "todo"
 ---
 
 ## 학습계기

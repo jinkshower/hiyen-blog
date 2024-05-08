@@ -6,7 +6,7 @@ update: 2024-04-11
 tags:
   - java
   - refactoring
-series: "java"
+series: "tickitecking"
 ---
 
 

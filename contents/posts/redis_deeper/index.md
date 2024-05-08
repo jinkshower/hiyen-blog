@@ -5,7 +5,7 @@ date: 2024-04-12
 update: 2024-04-12
 tags:
   - redis
-series: "redis"
+series: "tickitecking"
 ---
 
 ## 학습 계기

@@ -7,7 +7,7 @@ tags:
   - jpa
   - querydsl
   - pagination
-series: "jpa"
+series: "todo"
 ---
 
 

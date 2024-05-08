@@ -7,7 +7,7 @@ tags:
   - docker
   - continuous_depolyment
   - github_actions
-series: "ci/cd"
+series: "tickitecking"
 ---
 
 [이전 글](https://jinkshower.github.io/githubaction_automated_test/)에서 Github Actions로 CI환경을 만들고 적용한 글을 작성했던 적이 있습니다. 

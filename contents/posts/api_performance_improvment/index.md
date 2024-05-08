@@ -8,7 +8,7 @@ tags:
   - index
   - caching
   - querytuning
-series: "spring"
+series: "tickitecking"
 ---
 
 

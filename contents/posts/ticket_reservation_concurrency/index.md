@@ -7,7 +7,7 @@ tags:
   - concurrency
   - lock
   - redis
-series: "database"
+series: "tickitecking"
 ---
 
 

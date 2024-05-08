@@ -7,7 +7,7 @@ tags:
   - actuator
   - prometheus
   - grafana
-series: "monitoring"
+series: "tickitecking"
 ---
 
 

@@ -6,7 +6,7 @@ update: 2024-03-10
 tags:
   - jpa
   - querydsl
-series: "jpa"
+series: "todo"
 ---
 
 

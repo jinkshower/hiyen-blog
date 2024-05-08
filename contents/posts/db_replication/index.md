@@ -6,7 +6,7 @@ update: 2024-04-19
 tags:
   - MySQL
   - replication
-series: "database"
+series: "tickitecking"
 ---
 
 ## 학습 계기
