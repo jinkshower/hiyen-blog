@@ -1,8 +1,8 @@
 ---
 title: "'이미 선택된 좌석입니다' 티켓 예매시 중복예매생성 문제"
 description: "중복예매생성 문제를 해결한 기록"
-date: 2024-04-08
-update: 2024-04-08
+date: 2024-04-11
+update: 2024-04-11
 tags:
   - concurrency
   - lock

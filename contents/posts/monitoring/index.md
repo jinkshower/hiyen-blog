@@ -1,8 +1,8 @@
 ---
-title: "Actuator, Prometheus, Grafana로 서버 장애 대응하기"
+title: "Actuator, Prometheus, Grafana로 모니터링 환경을 구축해보자"
 description: "모니터링 시스템 구축을 통하여 안정적인 운영환경을 구축한 기록"
-date: 2024-04-24
-update: 2024-04-24
+date: 2024-05-13
+update: 2024-05-13
 tags:
   - actuator
   - prometheus

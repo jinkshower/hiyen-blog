@@ -1,8 +1,8 @@
 ---
 title: "리팩토링을 통해 유연한 도메인을 만들자!"
 description: "리팩토링으로 유연한 코드를 작성한 기록"
-date: 2024-04-11
-update: 2024-04-11
+date: 2024-04-16
+update: 2024-04-16
 tags:
   - java
   - refactoring

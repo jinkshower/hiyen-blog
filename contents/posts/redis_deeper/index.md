@@ -1,8 +1,8 @@
 ---
 title: "Redis, 좀 더 자세히 알아볼까?"
 description: "Redis의 자료구조를 학습하고 프로젝트에 적용한 기록"
-date: 2024-04-12
-update: 2024-04-12
+date: 2024-04-22
+update: 2024-04-22
 tags:
   - redis
 series: "tickitecking"
