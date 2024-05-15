@@ -264,7 +264,7 @@ data-styled.g45[id="Footer__HiddenWrapper-sc-zqxmks-9"]{content:"yzdKT,ivqWaF,"}
   
     <span class="token class-name">Reservation</span> reservation <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Reservation</span><span class="token punctuation">(</span>userId<span class="token punctuation">,</span> concertId<span class="token punctuation">,</span> seat<span class="token punctuation">.</span><span class="token function">getId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     reservationRepository<span class="token punctuation">.</span><span class="token function">save</span><span class="token punctuation">(</span>reservation<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span></code></pre></div>
+<span class="token punctuation">}</span></code></pre></div>
 <p>저희는 콘서트의 좌석을 행과 열로 관리하고 있기때문에 findSeatForReservation()을 통해서 해당 콘서트의 id, 행열 정보로 seat를 찾고 seat가 예약 가능한지 살펴보고 예약이 가능하다면 seat의 예약 필드를 바꾸고 reservation을 만드는 로직을 사용하고 있습니다.</p>
 <p>1번 콘서트의 A-1이라는 좌석을 20명의 사용자가 동시에 예매하는 테스트 코드를 작성해보았습니다.</p>
 <div class="gatsby-highlight" data-language="java"><pre class="language-java"><code class="language-java"><span class="token annotation punctuation">@DisplayName</span><span class="token punctuation">(</span><span class="token string">"동시에 한자리 예매시 첫번째 요청만 예매성공한다."</span><span class="token punctuation">)</span>  
@@ -322,7 +322,7 @@ data-styled.g45[id="Footer__HiddenWrapper-sc-zqxmks-9"]{content:"yzdKT,ivqWaF,"}
   
     <span class="token class-name">Reservation</span> reservation <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Reservation</span><span class="token punctuation">(</span>userId<span class="token punctuation">,</span> concertId<span class="token punctuation">,</span> seat<span class="token punctuation">.</span><span class="token function">getId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     reservationRepository<span class="token punctuation">.</span><span class="token function">save</span><span class="token punctuation">(</span>reservation<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span></code></pre></div>
+<span class="token punctuation">}</span></code></pre></div>
 <p>간단하게 예매 메서드에 synchronized 키워드를 추가하면 자바가 제공하는 동시성 제어를 사용할 수 있습니다.</p>
 <p>하지만 테스트는 실패합니다.</p>
 <p><img src="https://github.com/jinkshower/jinkshower.github.io/assets/135244018/346b5654-6179-4ea8-a628-dc3d4c4c9316" alt="Pasted image 20240407111955">
@@ -502,4 +502,4 @@ concert<em>id + seat</em>id를 복합unique키 설정을 해주면 중복된 예
           >
             window.___chunkMapping="{\"app\":[\"/app-92f8a5ff2a4980f0d12b.js\"],\"component---src-pages-404-jsx\":[\"/component---src-pages-404-jsx-e47b4cb7e798033e3bc2.js\"],\"component---src-pages-index-jsx\":[\"/component---src-pages-index-jsx-ede1eaa21f2d1d43f56c.js\"],\"component---src-pages-search-jsx\":[\"/component---src-pages-search-jsx-e3cac67c06a25c6db971.js\"],\"component---src-pages-series-jsx\":[\"/component---src-pages-series-jsx-f7f9d88c3c8b32752b9e.js\"],\"component---src-pages-tags-jsx\":[\"/component---src-pages-tags-jsx-411e63ea6f7d5aeeaab4.js\"],\"component---src-templates-post-jsx\":[\"/component---src-templates-post-jsx-111aa4ea319cfecd4f83.js\"],\"component---src-templates-series-jsx\":[\"/component---src-templates-series-jsx-883354e95c12fec1cb12.js\"]}";
           </script>
-        <script>window.___webpackCompilationHash="e257c8824df10f296de4";</script><script src="/webpack-runtime-753d22dff7b6769a176e.js" async></script><script src="/framework-259d0553ae9f97cccb3e.js" async></script><script src="/app-92f8a5ff2a4980f0d12b.js" async></script><!-- slice-end id="_gatsby-scripts-1" --></body></html>
+        <script>window.___webpackCompilationHash="6126b1eb598a70cff92a";</script><script src="/webpack-runtime-753d22dff7b6769a176e.js" async></script><script src="/framework-259d0553ae9f97cccb3e.js" async></script><script src="/app-92f8a5ff2a4980f0d12b.js" async></script><!-- slice-end id="_gatsby-scripts-1" --></body></html>
