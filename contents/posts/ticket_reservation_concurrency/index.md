@@ -38,7 +38,7 @@ public void createReservation(Long userId, Long concertId,
   
     Reservation reservation = new Reservation(userId, concertId, seat.getId());
     reservationRepository.save(reservation);
-    }
+}
 ```
 
 저희는 콘서트의 좌석을 행과 열로 관리하고 있기때문에 findSeatForReservation()을 통해서 해당 콘서트의 id, 행열 정보로 seat를 찾고 seat가 예약 가능한지 살펴보고 예약이 가능하다면 seat의 예약 필드를 바꾸고 reservation을 만드는 로직을 사용하고 있습니다.
@@ -114,7 +114,7 @@ public synchronized void createReservation(Long userId, Long concertId,
   
     Reservation reservation = new Reservation(userId, concertId, seat.getId());
     reservationRepository.save(reservation);
-    }
+}
 ```
 
 간단하게 예매 메서드에 synchronized 키워드를 추가하면 자바가 제공하는 동시성 제어를 사용할 수 있습니다.

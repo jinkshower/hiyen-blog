@@ -118,35 +118,21 @@ XREAD COUNT count STREAMS key ID
 
 ```java
 @Override  
-public ReservationResponseDto createReservation(Long userId, Long concertId,  
+public void createReservation(Long userId, Long concertId,  
     ReservationRequestDto requestDto) {  
-    Concert concert = findConcert(concertId);  
-	if (isTaken(concertId, requestDto.getHorizontal(), requestDto.getVertical())) {  
+  
+  	if (isTaken(concertId, requestDto.getHorizontal(), requestDto.getVertical())) {  
 	    throw new CustomRuntimeException("이미 예약된 좌석입니다.");  
 	}
+
+    Seat seat = seatRepository.findSeatForReservation(concertId,  
+        requestDto.getHorizontal(), requestDto.getVertical());  
   
-    Seat seat = seatRepository.findSeatForReservation(concertId, requestDto.getHorizontal(),  
-        requestDto.getVertical());  
-    if (!seat.isReservable()) {  
-        throw new CustomRuntimeException("예약 불가능한 좌석입니다.");  
-    }  
+    seat.validateAvailability();
     seat.reserve();  
   
-    Reservation reservation = Reservation.builder()  
-        .status("Y")  
-        .userId(userId)  
-        .concertId(concertId)  
-        .seatId(seat.getId())  
-        .build();  
-    Reservation save = reservationRepository.save(reservation);  
-  
-    return ReservationResponseDto.builder()  
-        .id(save.getId())  
-        .status(save.getStatus())  
-        .userId(save.getUserId())  
-        .concertId(save.getConcertId())  
-        .seatId(save.getSeatId())  
-        .build();  
+    Reservation reservation = new Reservation(userId, concertId, seat.getId());
+    reservationRepository.save(reservation);
 }
 
 private Boolean isTaken(Long concertId, String horizontal, String vertical) {  
@@ -167,7 +153,7 @@ private Boolean isTaken(Long concertId, String horizontal, String vertical) {
 
 concertId를 key값으로 두고 행열을 set의 value, hash의 field로 둔다면 콘서트 개수만큼만 key가 생기는 거니 메모리 효율성 측면에서 훨씬 낫다고 판단됩니다.
 
-## Set을 선택한 이유 
+## Set을 선택한 이유 
 
 저희가 선택한 자료구조는 Set이었습니다.
 
@@ -305,15 +291,35 @@ redis의 ttl도 정상적으로 세팅된 것을 확인할 수 있습니다.
 데이터 변경 커맨드를 모두 저장
 모든 쓰기 명령에 대한 로그를 남기기 때문에 장애 상황 직전까지 모든 데이터가 보장됩니다.
 
-저희는 당연히 예매 기능에서 Redis의 db정보가 중요한 역할을 하기 때문에 AOF를 선택하였습니다.
-
 AOF 설정은 redis.conf파일의 `appendonly`를 `yes`로 변경하면 AOF가 적용되고 서버 시작시 aof파일을 읽어서 db에 그대로 다시 저장하게 됩니다.
+
+## Redis 영속화의 주의점
+
+`RDB`
+
+RDB의 기본 설정은 `save <기준초> <쓰기개수>`입니다. 예를 들어 `save 90 1`이라면 90초 이후 1개의 쓰기가 발생했을 때 스냅샷을 찍어 저장하라는 의미입니다.
+
+`save`는 blocking 방식으로 이루어지기 때문에 redis의 동작이 멈추고 디스크에 스냅샷이 저장됩니다. 따라서 백그라운드에서 자식 프로세스를 띄운 후 non-blocking 방식으로 스냅샷을 저장하는 `bgsave`가 권장됩니다.
+
+`bgsave`시 주의해야 할 점은 Copy-On-Write 방식을 사용하기 때문에 자식 프로세스를 fork()할 때 부모 프로세스의 write가 많아 실제로 복사하게 되는 페이지가 많아진다면 메모리 사용량이 많아질 수 있고 이는 swap현상으로 이어져 성능에 영향이 갈 수도 있습니다.
+
+`AOF`
+
+AOF는 변경된 모든 명령을 기록하기 때문에 시간이 지남에 따라 파일 크기가 지나치게 늘어날 수 있습니다. 또한 이렇게 늘어난 파일을 이용해 복구를 수행하는 시간이 늘어날 수 있습니다.
+
+### 그래서 어떻게?
+
+Redis의 공식문서는 데이터가 유실되지 않기 위함이 목적일 때 RDB와 AOF를 같이 쓰는 것을 권장합니다.
+
+주기적으로 RDB로 스냅샷을 저장하고,다음 스냅샷까지의 write를 AOF로 수행한다면 서버가 재시작될 때 스냅샷을 읽어서 백업할 수 있고 비교적 적은 양의 로그만 읽을 수 있게 됩니다.
 
 ## 마치며
 
-이렇게 Redis의 자료구조와 메모리 관리, 영속화에 대해 알아보고 저희 프로젝트에 적용을 해봤습니다. Redis를 공부하며 제대로 쓰기 위해서는 좀 더 깊은 학습이 필요하다고 느껴졌고 이후에도 계속 학습하며 적용해보도록 하겠습니다.
+이렇게 Redis의 자료구조와 메모리 관리, 영속화에 대해 알아보고 저희 프로젝트에 적용, 주의점을 살펴봤습니다. Redis를 공부하며 제대로 쓰기 위해서는 좀 더 깊은 학습이 필요하다고 느껴졌고 이후에도 계속 학습하며 적용해보도록 하겠습니다.
 
 ---
 참고
 
 https://www.youtube.com/watch?v=92NizoBL4uA&t=1411s 
+
+https://redis.io/docs/latest/operate/oss_and_stack/management/persistence/
