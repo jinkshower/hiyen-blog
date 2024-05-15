@@ -11,6 +11,9 @@ tags:
 series: "tickitecking"
 ---
 
+## 프로젝트에 적용한 Pull Request
+
+[링크](https://github.com/lay-down-coding/tickitecking/pull/48)
 
 ## 학습계기
 

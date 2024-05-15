@@ -175,4 +175,5 @@ DB replication 적용 전의 읽기 성능
 참고
 
 Real MySQL 8.0 - 백은빈, 이성욱
+
 https://sup2is.github.io/2021/07/08/lazy-connection-datasource-proxy.html

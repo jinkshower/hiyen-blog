@@ -9,6 +9,11 @@ tags:
 series: "tickitecking"
 ---
 
+## 프로젝트에 적용한 Pull Request
+
+[링크](https://github.com/lay-down-coding/tickitecking/pull/31)
+
+## 학습 계기
 
 프로젝트를 진행하며 쿼리문을 짜고 있는데 너무나 많은 join을 사용하고 있다고 느껴졌습니다. 
 

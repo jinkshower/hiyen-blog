@@ -10,6 +10,9 @@ tags:
 series: "tickitecking"
 ---
 
+## 프로젝트에 적용한 Pull Request
+
+[링크](https://github.com/lay-down-coding/tickitecking/pull/35)
 
 ## 학습 계기
 
@@ -286,7 +289,7 @@ Spring환경에서 redis를 코드로 활용하기 위하여 RedisTemplate를 @B
 애플리케이션에서 redis로 미리 예외처리를 모두 해줬기 때문에 db에 insert쿼리가 단 하나만 날아가는 모습입니다.
 ![Pasted image 20240407193443](https://github.com/jinkshower/jinkshower.github.io/assets/135244018/73a814d4-47eb-4e08-aca2-88224491cd33)
 
-두 번째 방법, 메시지 큐 이용하기
+## 두 번째 방법, 메시지 큐 이용하기
 
 두 번째 방법은 메시지 큐를 이용하는 방법입니다.
 

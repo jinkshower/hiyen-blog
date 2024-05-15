@@ -130,7 +130,7 @@ public class TableCleaner {
     private JdbcTemplate jdbcTemplate;  
   
     @Autowired  
-    public DatabaseCleaner(DataSource dataSource) {  
+    public TableCleaner(DataSource dataSource) {  
         this.jdbcTemplate = new JdbcTemplate(dataSource);  
     }  
   
