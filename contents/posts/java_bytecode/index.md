@@ -293,7 +293,7 @@ Cat은 Hello,JVM이 출력된 이후에 실제로 사용될 때 동적으로 로
 
 JVM 구조를 설명하며 Java Stacks는 Frame단위로 쌓인다고 했습니다. main() 메서드를 실행하면 Java Stacks에 Main의 Frame이 하나 생기게 되고 해당 Frame의 내부는 현재 클래스의 Constant Pool에 대한 참조, 지역 변수 배열, 그리고 연산에 필요한 Operand Stack이 할당됩니다. 
 
-![[Pasted image 20240617193002.png]]
+![Pasted image 20240617193002](https://github.com/jinkshower/jinkshower.github.io/assets/135244018/086748ce-32e0-4a96-94e4-7f6c46d19e98)
 
 Local Variable Array의 크기는 컴파일시 정해지며 0번 인덱스는 언제나 객체 자신입니다.
 
@@ -307,7 +307,7 @@ dup은 최상위 스택을 복사하여 스택 위에 다시 넣으라는 명령
 new 이후 Operand Stack의 가장 위는 new로 만든 객체에 대한 참조가 있습니다. JVM Specification에 따르면 이 참조는 초기화 되기 전(hiyen에 할당되기 전) 스택에 푸시되어 있는 상태입니다. [참고](https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.10.1.9.new)
 
 iconst_5는 스택의 가장 위에 int 5를 푸시하라는 명령입니다.  이 두 명령 이후 Frame은 다음과 같습니다.
-![Pasted image 20240617193002](https://github.com/jinkshower/jinkshower.github.io/assets/135244018/086748ce-32e0-4a96-94e4-7f6c46d19e98)
+![Pasted image 20240617195441](https://github.com/jinkshower/jinkshower.github.io/assets/135244018/591f331b-9dfc-4ff8-a4ce-b4886409155f)
 
 ```
 5 : invokespecial #9 // Method practice/Cat."<init>":(I)V
@@ -316,12 +316,11 @@ iconst_5는 스택의 가장 위에 int 5를 푸시하라는 명령입니다.  �
 
 invokespecial은 Constant Pool의 9참조인 Cat 클래스의 생성자를 호출하는 명령어입니다.  생성자에 필요한 객체 참조와 age값이 pop되며 Cat의 객체가 생성되며 참조가 초기화 됩니다. [참고](https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.10.1.9.invokespecial)
 
-![Pasted image 20240617195441](https://github.com/jinkshower/jinkshower.github.io/assets/135244018/591f331b-9dfc-4ff8-a4ce-b4886409155f)
+![Pasted image 20240617195525](https://github.com/jinkshower/jinkshower.github.io/assets/135244018/9430fd2b-b4ad-4b47-8471-a5e4420d013b)
 
 astore_1은 Local Variable Array의 1번 인덱스에 스택의 최상위 결과를 저장합니다.
 
 ![Pasted image 20240617194956](https://github.com/jinkshower/jinkshower.github.io/assets/135244018/1ef55460-71ef-4400-92be-0929720975e1)
-
 `Cat hiyen = new Cat(5)` 이 끝난 이후 Frame의 메모리 모습입니다. 이제 hiyen이라는 변수로 Heap에 있는 객체에 접근하는 것이 가능해졌습니다.
 
 ```
@@ -330,6 +329,30 @@ astore_1은 Local Variable Array의 1번 인덱스에 스택의 최상위 결과
 ```
 
 aload_1로 Local Variables Array의 1번 인덱스에 접근하고 invokevirtual로 객체의 메서드를 사용하는 모습입니다.
+
+## static 변수는 어떻게 할당되나?
+
+```java
+private static Cat methodCat = new Cat(3);
+```
+
+static 변수에 객체를 생성하게 하면 어떻게 될 지도 궁금해졌습니다.
+
+![Pasted image 20240623215721](https://github.com/jinkshower/jinkshower.github.io/assets/135244018/9cc235ed-ece2-456a-a04b-6aa1ddfe7733)
+해당 부분을 추가한 뒤의 바이트코드입니다. 해당 바이트 코드는
+
+```java
+private static Cat methodCat;  
+  
+static {  
+    methodCat = new Cat(3);  
+}
+```
+의 바이트 코드와 동일합니다.
+
+따라서 static변수는 로딩 중 초기화 과정에서 static 블록을 실행시킨 것과 같다고 생각하면 되겠습니다. 
+
+물론 바이트 코드에서 보이는 것처럼 new , dup, iconst_3등이 같고 putstatic이라는 명령어만 다르니 힙 영역에 같은 과정으로 생성되고 다만 그 참조가 method영역에 가지고 있는 게 다르겠습니다.
 
 ---
 
