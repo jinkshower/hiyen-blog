@@ -7,7 +7,7 @@ tags:
   - spring
   - testing
   - testisolation
-series: "todo"
+series: "hiyen"
 ---
 
 완성된 코드는 [링크](https://github.com/jinkshower/Todo-management)에서 볼 수 있습니다. (글의 코드와 조금 다른 면이 있을 수 있습니다)

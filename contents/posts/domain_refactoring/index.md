@@ -6,7 +6,7 @@ update: 2024-04-16
 tags:
   - java
   - refactoring
-series: "tickitecking"
+series: "hiyen"
 ---
 
 ## 프로젝트에 적용한 Pull Request

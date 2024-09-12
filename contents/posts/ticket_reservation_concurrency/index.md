@@ -7,7 +7,7 @@ tags:
   - concurrency
   - lock
   - redis
-series: "tickitecking"
+series: "hiyen"
 ---
 
 ## 프로젝트에 적용한 Pull Request
