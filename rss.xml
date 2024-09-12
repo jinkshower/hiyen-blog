@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of Hiyen]]></title><description><![CDATA[Always want to write sometimes]]></description><link>https://jinkshower.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 12 Sep 2024 13:12:13 GMT</lastBuildDate><item><title><![CDATA[외부 API 호출과 데이터 처리]]></title><description><![CDATA[갈만해 프로젝트를 소개합니다 갈만해 웹사이트 갈만해 Github ![Pasted image 20240912211252.png…]]></description><link>https://jinkshower.github.io/galmanhae_first/</link><guid isPermaLink="false">https://jinkshower.github.io/galmanhae_first/</guid><pubDate>Sun, 25 Aug 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;갈만해 프로젝트를 소개합니다&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of Hiyen]]></title><description><![CDATA[Always want to write sometimes]]></description><link>https://jinkshower.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 12 Sep 2024 13:14:50 GMT</lastBuildDate><item><title><![CDATA[외부 API 호출과 데이터 처리]]></title><description><![CDATA[갈만해 프로젝트를 소개합니다 갈만해 웹사이트 갈만해 Github Pasted image 2024091221125…]]></description><link>https://jinkshower.github.io/galmanhae_first/</link><guid isPermaLink="false">https://jinkshower.github.io/galmanhae_first/</guid><pubDate>Sun, 25 Aug 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;갈만해 프로젝트를 소개합니다&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;https://galmanhae.site/&quot;&gt;갈만해 웹사이트&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;https://github.com/jinkshower/galmanhae&quot;&gt;갈만해 Github&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;![[Pasted image 20240912211252.png]]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/user-attachments/assets/9b263742-78dc-4823-b1a5-9bac1edb0d03&quot; alt=&quot;Pasted image 20240912211252&quot;&gt;&lt;/p&gt;
 &lt;p&gt;&apos;갈만해&apos;라는 웹서비스를 운영하고 있습니다. 블로그에 웹 서비스를 개발하며 겪은 문제점과 해결 과정을 공유하려고 합니다. 이번 글은 갈만해 프로젝트의 초반부에 겪었던문제들과 그에 대한 제 나름대로의 해법을 담았습니다.&lt;/p&gt;
 &lt;p&gt;갈만해 프로젝트는 실시간으로 서울 인구밀집 장소들의 날씨와 혼잡도를 계산하여 외출하기 적합한 정도를 알려주는 서비스입니다.&lt;/p&gt;
 &lt;h2&gt;어떤 API를 호출하지?&lt;/h2&gt;
@@ -16,9 +16,9 @@
 &lt;p&gt;하지만 문제가 있었습니다. 장소 코드만 보내면 원하는 데이터를 바로 받을 수 있는 인구 데이터API와 달리 기상청 단기예보는 기상청 자체의 x,y 좌표 계산법을 사용하고 이 x,y 값을 파라미터로 받고 있었던 것이었습니다. &lt;/p&gt;
 &lt;p&gt;엑셀파일을 하나하나 보면서 위경도를 검색하고 x,y좌표를 손수 계산하여 적는.. 그런 일을 상상했으나 우리는 개발자니까 자동화하는 스크립트를 작성하여 csv파일로 만들었습니다.  &lt;/p&gt;
 &lt;p&gt;서울시는 장소 목록에 대한 위도, 경도를 엑셀이 아니라 shp파일로 제공하고 있습니다.&lt;/p&gt;
-&lt;p&gt;![[Pasted image 20240912161539.png]]
+&lt;p&gt;&lt;img src=&quot;https://github.com/user-attachments/assets/2810fc1a-a470-4dda-93a8-d05ff06e17c8&quot; alt=&quot;Pasted image 20240912161539&quot;&gt;
 (서울시가 제공하는 zip 파일의 shp 데이터를 파싱하여 csv로 만드는 python 스크립트 일부)&lt;/p&gt;
-&lt;p&gt;![[Pasted image 20240912161715.png]]
+&lt;p&gt;&lt;img src=&quot;https://github.com/user-attachments/assets/28053538-f780-4146-896e-587364d806ea&quot; alt=&quot;Pasted image 20240912161715&quot;&gt;
 (만들어진 csv파일)&lt;/p&gt;
 &lt;p&gt;해당 csv파일을 프로젝트내에서 사용해서 파싱, 호출하는 로직을 작성하면 되겠군요.&lt;/p&gt;
 &lt;h2&gt;csv파일을 어떻게 사용하지 ?&lt;/h2&gt;
@@ -109,7 +109,7 @@
        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;PlaceMapper&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;toPlace&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;areaInfo&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;areaName&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; location&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; weather&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; congestion&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
     &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;![[Pasted image 20240912164826.png]]
+&lt;p&gt;&lt;img src=&quot;https://github.com/user-attachments/assets/0541739e-9a3a-4992-b02d-d7bed158b454&quot; alt=&quot;Pasted image 20240912164826&quot;&gt;
 따라서 csv파일을 읽고 각 api를 호출하여 Place라는 객체를 만드는 과정은 이렇게 이루어집니다. &lt;/p&gt;
 &lt;h2&gt;문제점과 개선&lt;/h2&gt;
 &lt;p&gt;현 방식의 문제점은 무엇일까요 ?&lt;/p&gt;
@@ -162,13 +162,13 @@
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;이렇게 호출 방식을 변경한 이후 로컬에서 1분 이상 걸리던 호출이 6~7초로 걸리는 것을 확인하게 되었습니다. (timeout으로 지정한 시간과 비슷합니다.)&lt;/p&gt;
 &lt;p&gt;또한 csv파일을 수동으로 업로드하지 않고 코드 기반으로 애플리케이션 시작마다 zip파일을 다운로드하고 shp파일을 파싱하여 db에 저장하는 로직을 작성했습니다.  자세한 코드는 &lt;a href=&quot;https://github.com/jinkshower/galmanhae/pull/14&quot;&gt;PR&lt;/a&gt; 과 &lt;a href=&quot;https://github.com/jinkshower/galmanhae/pull/14/commits/4b6351393ea3c3e5516df7a828322088af8e5d19&quot;&gt;커밋&lt;/a&gt;을 참고해주시면 될 것 같습니다. &lt;/p&gt;
-&lt;p&gt;![[Pasted image 20240912211946.png]]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/user-attachments/assets/26b12125-8b84-415a-93ad-00057489af00&quot; alt=&quot;Pasted image 20240912211946&quot;&gt;&lt;/p&gt;
 &lt;p&gt;&apos;DataProcessor&apos; 클래스와 마찬가지로 데이터 처리를 통제하는 &apos;PlaceInfoDataProcessor&apos;를 두고 zipfile을 다운로드하는 객체, zip파일을 파싱하고 애플리케이션에서 사용할 수 있는 객체를 주입 받아 데이터 처리 과정을 쉽게 알아 볼 수 있게 만들었습니다.&lt;/p&gt;
 &lt;h2&gt;saveAll은 ForEach save이다.&lt;/h2&gt;
 &lt;p&gt;위의 코드에서 보시면 알겠지만 데이터 처리에서 saveAll을 사용할 일이 많습니다. 한꺼번에 처리한 데이터를 한꺼번에 저장하여 DB에 날아가는 쿼리를 줄이기 위해서죠. 하지만 Data JPA가 제공하는 saveAll()메서드는 함정이 있습니다.&lt;/p&gt;
-&lt;p&gt;![[Pasted image 20240912212538.png]]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/user-attachments/assets/f034703d-c184-462b-9439-2943c836b1a1&quot; alt=&quot;Pasted image 20240912212538&quot;&gt;&lt;/p&gt;
 &lt;p&gt;saveAll을 호출해도 하나하나씩 insert쿼리가 나가기 때문이죠. insert쿼리가 이렇게 많이 동일 테이블에 나가면 MySQL기준은 insert 쿼리 자체로 배타락을 걸기 때문에 테이블 잠금이 계속 이어지고 다른 write 요청과 겹칠시 데드락이 걸릴수도 있는 위험을 가집니다. &lt;/p&gt;
-&lt;p&gt;![[Pasted image 20240912213235.png]]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/user-attachments/assets/32f07e1c-9761-49d5-9312-763e0846106f&quot; alt=&quot;Pasted image 20240912213235&quot;&gt;&lt;/p&gt;
 &lt;p&gt;SimpleJpaRepository는 내부적으로 for문을 돌며 하나씩 save를 진행하기 때문에 insert쿼리를 객체 수만큼 영속성 컨텍스트에 쌓아두게 됩니다. &lt;/p&gt;
 &lt;p&gt;따라서 이를 한번에 넣는 방식으로 바꾸겠습니다. &lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token annotation punctuation&quot;&gt;@Override&lt;/span&gt;  
