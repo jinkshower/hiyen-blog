@@ -15,7 +15,7 @@ series: "hiyen"
 - [갈만해 웹사이트](https://galmanhae.site/)
 - [갈만해 Github](https://github.com/jinkshower/galmanhae)
 
-![[Pasted image 20240912211252.png]]
+![Pasted image 20240912211252](https://github.com/user-attachments/assets/9b263742-78dc-4823-b1a5-9bac1edb0d03)
 
 '갈만해'라는 웹서비스를 운영하고 있습니다. 블로그에 웹 서비스를 개발하며 겪은 문제점과 해결 과정을 공유하려고 합니다. 이번 글은 갈만해 프로젝트의 초반부에 겪었던문제들과 그에 대한 제 나름대로의 해법을 담았습니다.
 
@@ -41,10 +41,10 @@ series: "hiyen"
 
 서울시는 장소 목록에 대한 위도, 경도를 엑셀이 아니라 shp파일로 제공하고 있습니다.
 
-![[Pasted image 20240912161539.png]]
+![Pasted image 20240912161539](https://github.com/user-attachments/assets/2810fc1a-a470-4dda-93a8-d05ff06e17c8)
 (서울시가 제공하는 zip 파일의 shp 데이터를 파싱하여 csv로 만드는 python 스크립트 일부)
 
-![[Pasted image 20240912161715.png]]
+![Pasted image 20240912161715](https://github.com/user-attachments/assets/28053538-f780-4146-896e-587364d806ea)
 (만들어진 csv파일)
 
 해당 csv파일을 프로젝트내에서 사용해서 파싱, 호출하는 로직을 작성하면 되겠군요.
@@ -153,7 +153,7 @@ public class DataProcessor {
 }
 ```
 
-![[Pasted image 20240912164826.png]]
+![Pasted image 20240912164826](https://github.com/user-attachments/assets/0541739e-9a3a-4992-b02d-d7bed158b454)
 따라서 csv파일을 읽고 각 api를 호출하여 Place라는 객체를 만드는 과정은 이렇게 이루어집니다. 
 
 ## 문제점과 개선
@@ -221,7 +221,7 @@ private WeatherAndCongestion fetch(final Place place) {
 
 또한 csv파일을 수동으로 업로드하지 않고 코드 기반으로 애플리케이션 시작마다 zip파일을 다운로드하고 shp파일을 파싱하여 db에 저장하는 로직을 작성했습니다.  자세한 코드는 [PR](https://github.com/jinkshower/galmanhae/pull/14) 과 [커밋](https://github.com/jinkshower/galmanhae/pull/14/commits/4b6351393ea3c3e5516df7a828322088af8e5d19)을 참고해주시면 될 것 같습니다. 
 
-![[Pasted image 20240912211946.png]]
+![Pasted image 20240912211946](https://github.com/user-attachments/assets/26b12125-8b84-415a-93ad-00057489af00)
 
 'DataProcessor' 클래스와 마찬가지로 데이터 처리를 통제하는 'PlaceInfoDataProcessor'를 두고 zipfile을 다운로드하는 객체, zip파일을 파싱하고 애플리케이션에서 사용할 수 있는 객체를 주입 받아 데이터 처리 과정을 쉽게 알아 볼 수 있게 만들었습니다.
 
@@ -229,11 +229,11 @@ private WeatherAndCongestion fetch(final Place place) {
 
 위의 코드에서 보시면 알겠지만 데이터 처리에서 saveAll을 사용할 일이 많습니다. 한꺼번에 처리한 데이터를 한꺼번에 저장하여 DB에 날아가는 쿼리를 줄이기 위해서죠. 하지만 Data JPA가 제공하는 saveAll()메서드는 함정이 있습니다.
 
-![[Pasted image 20240912212538.png]]
+![Pasted image 20240912212538](https://github.com/user-attachments/assets/f034703d-c184-462b-9439-2943c836b1a1)
 
 saveAll을 호출해도 하나하나씩 insert쿼리가 나가기 때문이죠. insert쿼리가 이렇게 많이 동일 테이블에 나가면 MySQL기준은 insert 쿼리 자체로 배타락을 걸기 때문에 테이블 잠금이 계속 이어지고 다른 write 요청과 겹칠시 데드락이 걸릴수도 있는 위험을 가집니다. 
 
-![[Pasted image 20240912213235.png]]
+![Pasted image 20240912213235](https://github.com/user-attachments/assets/32f07e1c-9761-49d5-9312-763e0846106f)
 
 SimpleJpaRepository는 내부적으로 for문을 돌며 하나씩 save를 진행하기 때문에 insert쿼리를 객체 수만큼 영속성 컨텍스트에 쌓아두게 됩니다. 
 
