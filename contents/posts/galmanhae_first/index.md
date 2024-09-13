@@ -32,7 +32,7 @@ series: "hiyen"
 
 따라서 일정 간격으로 35MB의 데이터를 주고 받는 것보다 원하는 데이터만 받게 해 네트워크 오버헤드를 줄이는 것으로 결정했습니다. 
 
-최종적으로 선택하게 된 두 공공데이터 API는 [서울 실시간 인구 데이터]([https://data.seoul.go.kr/dataList/OA-21778/A/1/datasetView.do](https://data.seoul.go.kr/dataList/OA-21778/A/1/datasetView.do), [기상청 단기예보]([https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15084084](https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15084084) 였습니다.  두 API에서 원하는 데이터만 제가 골라서 애플리케이션에서 조립하면 될 거라고 생각했습니다.
+최종적으로 선택하게 된 두 공공데이터 API는 [서울 실시간 인구 데이터](https://data.seoul.go.kr/dataList/OA-21778/A/1/datasetView.do), [기상청 단기예보](https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15084084) 였습니다.  두 API에서 원하는 데이터만 제가 골라서 애플리케이션에서 조립하면 될 거라고 생각했습니다.
 
 ## 호출 파라미터를 어떻게 만들지?
 
